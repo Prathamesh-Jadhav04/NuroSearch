@@ -1,0 +1,9 @@
+# Core web framework
+flask>=3.0,<4.0
+flask-cors>=4.0,<5.0
+
+# PDF processing
+pypdf>=4.0,<5.0
+
+# Optional: Redis caching (gracefully disabled if unavailable)
+redis>=5.0,<6.0

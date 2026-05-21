@@ -1,0 +1,49 @@
+# Python runtime
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.Python
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+
+# Database files
+vectors.db
+vectors.db-wal
+vectors.db-shm
+
+# IDE files
+.vscode/
+.idea/
+*.user
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Testing
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Server logs
+server_out.txt
+server_err.txt
+
+# AI agent files
+.opencode/
+*.plan.md
+
+# Screenshots
+Screenshot/
