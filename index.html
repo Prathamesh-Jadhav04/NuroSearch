@@ -159,6 +159,7 @@ aside.sidebar {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
 }
 
 .nav-item {
@@ -173,11 +174,33 @@ aside.sidebar {
   color: var(--ink-muted);
   font-size: 13px;
   font-weight: 500;
+  z-index: 1;
 }
 
-.nav-item svg {
+.nav-indicator-pill {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  z-index: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              height 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateY(0);
+  will-change: transform, height, opacity;
+}
+
+.nav-item svg, .nav-item i {
   width: 18px;
   height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
   fill: currentColor;
   transition: transform 0.2s ease;
 }
@@ -185,17 +208,16 @@ aside.sidebar {
 .nav-item:hover {
   background: var(--surface-1);
   color: var(--ink);
-  transform: translateX(2px);
+  transform: translateX(4px);
 }
 
-.nav-item:hover svg {
-  transform: scale(1.05);
+.nav-item:hover svg, .nav-item:hover i {
+  transform: scale(1.1) rotate(2deg);
 }
 
 .nav-item.on {
-  background: var(--surface-2);
   color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--hairline);
+  z-index: 1;
 }
 
 .nav-item::before {
@@ -304,6 +326,7 @@ header.top-header {
 main.content-area {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 30px;
   position: relative;
   z-index: 1;
@@ -681,6 +704,49 @@ textarea {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Skeleton Loading styles */
+.skeleton-card {
+  pointer-events: none;
+  border-color: var(--hairline-soft) !important;
+  box-shadow: none !important;
+}
+.skeleton-icon {
+  background: var(--surface-2) !important;
+  border-color: var(--hairline-soft) !important;
+  animation: skeleton-pulse 1.4s infinite ease-in-out;
+}
+.skeleton-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.skeleton-line {
+  height: 11px;
+  background: var(--surface-2);
+  border-radius: var(--radius-xs);
+  animation: skeleton-pulse 1.4s infinite ease-in-out;
+}
+.skeleton-title {
+  width: 70%;
+  height: 14px;
+}
+.skeleton-meta {
+  width: 35%;
+  height: 10px;
+}
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0.45;
+  }
+}
+
 .result-card:hover {
   transform: translateY(-2px) scale(1.005);
   border-color: var(--accent-blue);
@@ -933,11 +999,11 @@ textarea {
 }
 
 .chat-bubble.user {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: linear-gradient(135deg, var(--grad-violet) 0%, var(--grad-magenta) 100%);
+  color: #ffffff;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
-  box-shadow: var(--shadow-premium);
+  box-shadow: var(--shadow-premium), 0 4px 14px rgba(106, 76, 245, 0.15);
 }
 
 .chat-bubble.ai {
@@ -948,6 +1014,7 @@ textarea {
   align-self: flex-start;
   border-bottom-left-radius: 4px;
   border: 1px solid var(--border-trans);
+  border-left: 3px solid var(--accent-blue);
   width: 100%;
   box-shadow: var(--shadow-premium);
 }
@@ -1058,25 +1125,29 @@ textarea {
 
 .suggestion-chip {
   cursor: pointer;
-  background: var(--trans-white-05);
-  border: 1px solid var(--border-trans);
-  padding: 3px 10px;
+  background: var(--surface-trans);
+  border: 1px solid var(--hairline);
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   color: var(--ink-muted);
   user-select: none;
-  font-size: 10px;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .suggestion-chip:hover {
-  background: var(--trans-white-08);
-  color: var(--ink);
+  background: var(--surface-trans-hover);
+  color: var(--accent-blue);
   border-color: var(--accent-blue);
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px rgba(0, 153, 255, 0.06);
 }
 
 .suggestion-chip:active {
-  transform: translateY(0);
+  transform: translateY(-0.5px);
 }
 
 .highlight-mark {
@@ -1893,7 +1964,8 @@ textarea {
 /* ── TAB CONTENT DISPLAY CONTROLS ── */
 .tab-content {
   display: none;
-  animation: tabFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  animation: tabFade 0.42s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  will-change: transform, opacity, filter;
 }
 
 .tab-content.on {
@@ -1901,8 +1973,16 @@ textarea {
 }
 
 @keyframes tabFade {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  0% { 
+    opacity: 0; 
+    transform: scale(0.975) translateY(14px);
+    filter: blur(6px);
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
 }
 
 /* ── RESPONSIVE STYLING ── */
@@ -2047,6 +2127,77 @@ textarea {
   .contact-link {
     width: 100%;
     justify-content: center;
+  }
+  .search-bar input {
+    min-width: 0 !important;
+  }
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .stats {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .sql-inputs-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+}
+
+.sql-inputs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+@media (max-width: 420px) {
+  .header-badge {
+    font-size: 0 !important;
+    padding: 8px !important;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    justify-content: center;
+  }
+  .header-badge::before {
+    margin: 0 !important;
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  main.content-area {
+    padding: 12px 10px !important;
+  }
+  header.top-header {
+    padding: 0 12px !important;
+  }
+  .search-bar {
+    gap: 4px !important;
+  }
+  .search-bar input {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+  .search-btn {
+    padding: 8px 10px !important;
+    font-size: 11px !important;
+  }
+  .status-card {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  .result-card {
+    padding: 8px 10px !important;
+    gap: 8px !important;
+  }
+  .bench-card {
+    padding: 10px !important;
   }
 }
 
@@ -2198,6 +2349,34 @@ body.cursor-active [onclick] {
   body.cursor-active [onclick] {
     cursor: auto !important;
   }
+/* ── Dropzone File Uploader ── */
+.dropzone {
+  border: 1.5px dashed var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface-trans);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--accent-blue);
+  background: var(--surface-trans-hover);
+  box-shadow: 0 4px 12px rgba(0, 153, 255, 0.04);
+}
+.dropzone-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.dropzone-sub {
+  font-size: 10px;
+  color: var(--ink-muted);
+  margin-top: 4px;
 }
 
 /* ── Custom Toasts ── */
@@ -2277,36 +2456,37 @@ body.cursor-active [onclick] {
     </div>
     
     <nav class="nav-links">
+      <div class="nav-indicator-pill" id="navIndicatorPill"></div>
       <div class="nav-item on" onclick="switchTab('home', this)">
-        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <i class="ti ti-search"></i>
         <span>Search</span>
       </div>
       <div class="nav-item" onclick="switchTab('stats', this)">
-        <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+        <i class="ti ti-chart-dots"></i>
         <span>Visualize</span>
       </div>
       <div class="nav-item" onclick="switchTab('docs', this)">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <i class="ti ti-files"></i>
         <span>Docs</span>
       </div>
       <div class="nav-item" onclick="switchTab('ai', this)">
-        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <i class="ti ti-brain"></i>
         <span>AI RAG</span>
       </div>
       <div class="nav-item" onclick="switchTab('ai-working', this)">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <i class="ti ti-git-commit"></i>
         <span>AI Working</span>
       </div>
       <div class="nav-item" onclick="switchTab('sql', this)">
-        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <i class="ti ti-terminal-2"></i>
         <span>SQL Query</span>
       </div>
       <div class="nav-item" onclick="switchTab('cluster', this)">
-        <svg viewBox="0 0 24 24"><path d="M19 13H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm10 0h-6v-2h6v2zM19 3H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 7H7V5h2v2zm10 0h-6V5h6v2z" fill="currentColor"/></svg>
+        <i class="ti ti-server-2"></i>
         <span>Cluster</span>
       </div>
       <div class="nav-item" onclick="switchTab('about', this)">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <i class="ti ti-help-circle"></i>
         <span>About</span>
       </div>
     </nav>
@@ -2321,6 +2501,9 @@ body.cursor-active [onclick] {
         <span class="mobile-logo-title">NuroSearch</span>
       </div>
       <div class="header-right" style="display: flex; align-items: center; gap: 12px;">
+        <button id="soundToggleBtn" class="theme-toggle-btn" title="Toggle Sound Mute/Unmute" onclick="toggleSound()">
+          <i class="ti ti-volume" id="soundIcon"></i>
+        </button>
         <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light/Dark Mode" onclick="toggleTheme()">
           <i class="ti ti-sun" id="themeIcon"></i>
         </button>
@@ -2358,9 +2541,27 @@ body.cursor-active [onclick] {
             
             <div class="section-title">Search Results</div>
             <div id="results">
-              <div class="empty-state">
-                <div class="empty-state-icon">⌕</div>
-                <div class="empty-state-text">Enter a query to find nearest vectors</div>
+              <!-- Permanent initial skeleton placeholders -->
+              <div class="result-card skeleton-card" style="animation-delay: 0s;">
+                <div class="res-icon skeleton-icon"></div>
+                <div class="skeleton-info">
+                  <div class="skeleton-line skeleton-title" style="width: 55%;"></div>
+                  <div class="skeleton-line skeleton-meta" style="width: 25%;"></div>
+                </div>
+              </div>
+              <div class="result-card skeleton-card" style="animation-delay: 0.15s;">
+                <div class="res-icon skeleton-icon"></div>
+                <div class="skeleton-info">
+                  <div class="skeleton-line skeleton-title" style="width: 70%;"></div>
+                  <div class="skeleton-line skeleton-meta" style="width: 35%;"></div>
+                </div>
+              </div>
+              <div class="result-card skeleton-card" style="animation-delay: 0.3s;">
+                <div class="res-icon skeleton-icon"></div>
+                <div class="skeleton-info">
+                  <div class="skeleton-line skeleton-title" style="width: 45%;"></div>
+                  <div class="skeleton-line skeleton-meta" style="width: 20%;"></div>
+                </div>
               </div>
             </div>
             
@@ -2535,10 +2736,19 @@ body.cursor-active [onclick] {
               <span style="position:absolute; top: -9px; left:50%; transform:translateX(-50%); background:var(--surface-1); padding:0 10px; font-size:10px; color:var(--ink-muted); text-transform:uppercase;">or</span>
             </div>
             
-            <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600; margin-bottom:10px;">Upload File</h4>
-            <input type="file" id="docFile" accept=".pdf,.txt" style="margin-bottom:10px; padding:6px; color:var(--ink-muted);" />
-            <button class="btn-secondary" id="uploadDocBtn" onclick="uploadDocument()" style="width:100%;">
-              Upload & Embed File
+            <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600; margin-bottom:10px;">Upload File Context</h4>
+            <div class="dropzone" id="dropzone" onclick="document.getElementById('docFile').click()">
+              <i class="ti ti-cloud-upload" style="font-size:32px; color:var(--accent-blue); margin-bottom:8px;"></i>
+              <div class="dropzone-text">Drag &amp; drop PDF/TXT file here</div>
+              <div class="dropzone-sub">or click to browse local files</div>
+              <input type="file" id="docFile" accept=".pdf,.txt" style="display:none;" onchange="handleFileSelect(this)" />
+            </div>
+            <div id="fileInfo" style="display:none; font-size:11px; margin-top:8px; background:var(--surface-2); padding:6px 10px; border-radius:4px; border:1px dashed var(--hairline); justify-content:space-between; align-items:center;">
+              <span id="fileName" style="color:var(--ink); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80%;">No file selected</span>
+              <button class="connect-action-btn" onclick="clearFileSelect(event)" style="color:#ef4444; opacity:1; padding:2px;"><i class="ti ti-x"></i></button>
+            </div>
+            <button class="btn-secondary" id="uploadDocBtn" onclick="uploadDocument()" style="width:100%; margin-top:10px;">
+              Upload &amp; Embed File
             </button>
             
             <div id="insertStatus" style="font-size:11px; color:var(--accent-blue); margin-top:10px; text-align:center;"></div>
@@ -2817,7 +3027,7 @@ body.cursor-active [onclick] {
                 <span class="suggestion-chip" onclick="fillSQL('SELECT * FROM vectors WHERE similarity > 0.8 LIMIT 5')">High Similarity</span>
               </div>
               
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:14px; text-align:left;">
+              <div class="sql-inputs-row">
                 <div>
                   <div class="section-label">Companion Vector v (Optional 16D)</div>
                   <input type="text" id="sqlQueryVector" placeholder="0.1,0.5,-0.2,..." style="width:100%; height:36px; background:var(--surface-trans); border:1px solid var(--hairline); border-radius:6px; color:var(--ink); padding:0 10px; box-sizing:border-box; font-family:monospace; font-size:11px;" />
@@ -3246,6 +3456,20 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
                 </div>
               </div>
               <div class="portal-field">
+                <label>Transmission Type</label>
+                <div class="pills" id="portalTypePills" style="margin-bottom: 4px;">
+                  <div class="pill on" onclick="setPortalType(this, 'Feedback')">
+                    <i class="ti ti-message" style="margin-right:4px;"></i>Feedback
+                  </div>
+                  <div class="pill" onclick="setPortalType(this, 'Bug Report')">
+                    <i class="ti ti-bug" style="margin-right:4px;"></i>Bug Report
+                  </div>
+                  <div class="pill" onclick="setPortalType(this, 'Suggestion')">
+                    <i class="ti ti-bulb" style="margin-right:4px;"></i>Suggestion
+                  </div>
+                </div>
+              </div>
+              <div class="portal-field">
                 <label>Message payload</label>
                 <textarea id="portalMessage" class="portal-input portal-textarea" placeholder="Input feedback parameters..."></textarea>
               </div>
@@ -3315,9 +3539,9 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
         <h3 style="font-family:'Outfit'; font-size:16px; font-weight:600; margin-bottom:12px; color:var(--ink);">Active Cluster Workers</h3>
         <div class="worker-grid" id="workerContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:24px;">
           <!-- Worker-1 Card -->
-          <div class="status-card" id="card-worker-1" style="border: 1px solid var(--border-trans); transition: all 0.3s ease;">
+          <div class="status-card" id="card-worker-1" style="border:1px solid var(--border-trans); transition:all 0.3s ease;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;">worker-1</h4>
+              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;"><i class="ti ti-server" style="margin-right:6px; color:var(--accent-blue);"></i>worker-1</h4>
               <span class="res-badge" id="status-worker-1" style="background:#ff4b4b; color:#fff; font-size:10px;">Offline</span>
             </div>
             <div style="font-size:12px; color:var(--ink-muted); margin-bottom:12px;">
@@ -3338,6 +3562,16 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
                 <div id="log-worker-1" style="font-weight:600; font-family:monospace;">—</div>
               </div>
             </div>
+            <!-- CPU Telemetry -->
+            <div style="margin-bottom:14px; border-top:1px solid var(--hairline-soft); padding-top:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--ink-muted); margin-bottom:4px;">
+                <span>CPU UTILIZATION</span>
+                <span id="cpu-worker-1">0%</span>
+              </div>
+              <div style="height:4px; background:var(--surface-2); border-radius:2px; overflow:hidden;">
+                <div id="cpu-bar-worker-1" style="width:0%; height:100%; background:var(--accent-blue); transition:width 0.4s ease;"></div>
+              </div>
+            </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; position:relative;">
               <button onclick="copyText(this, 'python worker.py --port 8081 --node-id worker-1 --raft-host 127.0.0.1 --raft-port 8181 --partners 127.0.0.1:8182,127.0.0.1:8183')" style="position:absolute; right:6px; top:6px; background:none; border:none; color:var(--ink-muted); cursor:pointer; font-size:10px; font-family:sans-serif;">Copy</button>
               <div style="font-size:10px; color:var(--ink-muted); text-transform:uppercase; margin-bottom:4px;">Run Command</div>
@@ -3346,9 +3580,9 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
           </div>
 
           <!-- Worker-2 Card -->
-          <div class="status-card" id="card-worker-2" style="border: 1px solid var(--border-trans); transition: all 0.3s ease;">
+          <div class="status-card" id="card-worker-2" style="border:1px solid var(--border-trans); transition:all 0.3s ease;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;">worker-2</h4>
+              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;"><i class="ti ti-server" style="margin-right:6px; color:var(--accent-blue);"></i>worker-2</h4>
               <span class="res-badge" id="status-worker-2" style="background:#ff4b4b; color:#fff; font-size:10px;">Offline</span>
             </div>
             <div style="font-size:12px; color:var(--ink-muted); margin-bottom:12px;">
@@ -3369,6 +3603,16 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
                 <div id="log-worker-2" style="font-weight:600; font-family:monospace;">—</div>
               </div>
             </div>
+            <!-- CPU Telemetry -->
+            <div style="margin-bottom:14px; border-top:1px solid var(--hairline-soft); padding-top:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--ink-muted); margin-bottom:4px;">
+                <span>CPU UTILIZATION</span>
+                <span id="cpu-worker-2">0%</span>
+              </div>
+              <div style="height:4px; background:var(--surface-2); border-radius:2px; overflow:hidden;">
+                <div id="cpu-bar-worker-2" style="width:0%; height:100%; background:var(--accent-blue); transition:width 0.4s ease;"></div>
+              </div>
+            </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; position:relative;">
               <button onclick="copyText(this, 'python worker.py --port 8082 --node-id worker-2 --raft-host 127.0.0.1 --raft-port 8182 --partners 127.0.0.1:8181,127.0.0.1:8183')" style="position:absolute; right:6px; top:6px; background:none; border:none; color:var(--ink-muted); cursor:pointer; font-size:10px; font-family:sans-serif;">Copy</button>
               <div style="font-size:10px; color:var(--ink-muted); text-transform:uppercase; margin-bottom:4px;">Run Command</div>
@@ -3377,9 +3621,9 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
           </div>
 
           <!-- Worker-3 Card -->
-          <div class="status-card" id="card-worker-3" style="border: 1px solid var(--border-trans); transition: all 0.3s ease;">
+          <div class="status-card" id="card-worker-3" style="border:1px solid var(--border-trans); transition:all 0.3s ease;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;">worker-3</h4>
+              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;"><i class="ti ti-server" style="margin-right:6px; color:var(--accent-blue);"></i>worker-3</h4>
               <span class="res-badge" id="status-worker-3" style="background:#ff4b4b; color:#fff; font-size:10px;">Offline</span>
             </div>
             <div style="font-size:12px; color:var(--ink-muted); margin-bottom:12px;">
@@ -3398,6 +3642,16 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
               <div>
                 <span style="font-size:10px; color:var(--ink-muted); text-transform:uppercase;">Log Size</span>
                 <div id="log-worker-3" style="font-weight:600; font-family:monospace;">—</div>
+              </div>
+            </div>
+            <!-- CPU Telemetry -->
+            <div style="margin-bottom:14px; border-top:1px solid var(--hairline-soft); padding-top:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--ink-muted); margin-bottom:4px;">
+                <span>CPU UTILIZATION</span>
+                <span id="cpu-worker-3">0%</span>
+              </div>
+              <div style="height:4px; background:var(--surface-2); border-radius:2px; overflow:hidden;">
+                <div id="cpu-bar-worker-3" style="width:0%; height:100%; background:var(--accent-blue); transition:width 0.4s ease;"></div>
               </div>
             </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; position:relative;">
@@ -3460,9 +3714,23 @@ let clusterInterval = null;
 // ═══════════════════════════════════════════════════════════
 //  TABS & MOBILE NAVIGATION
 // ═══════════════════════════════════════════════════════════
+function updateNavIndicator(activeEl) {
+  const indicator = document.getElementById('navIndicatorPill');
+  if (!indicator || !activeEl) return;
+  indicator.style.opacity = '1';
+  indicator.style.height = activeEl.offsetHeight + 'px';
+  indicator.style.transform = `translateY(${activeEl.offsetTop}px)`;
+}
+
 function toggleMobileMenu() {
   const sidebar = document.getElementById('sidebarNav');
   sidebar.classList.toggle('show');
+  if (sidebar.classList.contains('show')) {
+    const activeNav = sidebar.querySelector('.nav-item.on');
+    if (activeNav) {
+      setTimeout(() => updateNavIndicator(activeNav), 150);
+    }
+  }
 }
 
 // Close sidebar menu when clicking outside on mobile
@@ -3479,7 +3747,10 @@ function switchTab(name, el) {
   document.getElementById('tab-' + name).classList.add('on');
   
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('on'));
-  if (el) el.classList.add('on');
+  if (el) {
+    el.classList.add('on');
+    updateNavIndicator(el);
+  }
   
   const sidebar = document.getElementById('sidebarNav');
   if (sidebar) sidebar.classList.remove('show');
@@ -3946,6 +4217,10 @@ async function runSearch() {
   const text=document.getElementById('qInput').value.trim(); 
   if(!text) return;
   saveSearchHistory(text, selAlgo, selMetric);
+  
+  // Render animated skeleton structure first
+  renderSkeletons();
+  
   const emb=textToEmbedding(text);
   
   let url = `${API}/search?v=${emb.join(',')}&k=5&metric=${selMetric}&algo=${selAlgo}`;
@@ -3954,7 +4229,12 @@ async function runSearch() {
   }
   
   try {
-    const r=await fetch(url);
+    // Artificial min delay of 600ms to allow skeleton to animate smoothly and prevent visual flash
+    const [r] = await Promise.all([
+      fetch(url),
+      new Promise(resolve => setTimeout(resolve, 600))
+    ]);
+    
     if (r.status === 400) {
       const err = await r.json();
       if (err.error && err.error.includes("not trained")) {
@@ -3981,6 +4261,19 @@ function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
+function renderSkeletons() {
+  const resContainer = document.getElementById('results');
+  resContainer.innerHTML = Array.from({ length: 3 }).map((_, i) => `
+    <div class="result-card skeleton-card" style="animation-delay: ${i * 0.15}s;">
+      <div class="res-icon skeleton-icon"></div>
+      <div class="skeleton-info">
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-meta"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
 function renderResults(results) {
   const resContainer = document.getElementById('results');
   if (!results || !results.length){
@@ -3991,7 +4284,8 @@ function renderResults(results) {
   resContainer.innerHTML = results.map((r,i)=>{
     const col = getCatColor(r.category);
     const bg = getCatBgColor(r.category);
-    return `<div class="result-card">
+    // Add dynamic inline animation-delay for staggered entry transition
+    return `<div class="result-card" style="animation-delay: ${i * 60}ms;">
       <div class="res-icon" style="background:${bg};color:${col}">${r.category[0].toUpperCase()}</div>
       <div class="res-info">
         <div class="res-title">${escapeHtml(r.metadata)}</div>
@@ -4199,12 +4493,12 @@ async function checkOllamaStatus() {
     const r=await fetch(API+'/status'), d=await r.json();
     const badge=document.getElementById('headerBadge');
     if (d.ollamaAvailable) {
-      badge.textContent='Ollama Online';
+      badge.innerHTML = '<span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#22c55e; margin-right:6px; animation:breath-green 2s infinite ease-in-out;"></span> Ollama Online';
       badge.style.color='#22c55e';
       badge.style.background='rgba(34,197,94,0.1)';
       badge.style.borderColor='rgba(34,197,94,0.2)';
     } else {
-      badge.textContent='Ollama Offline';
+      badge.innerHTML = '<span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ff4b4b; margin-right:6px;"></span> Ollama Offline';
       badge.style.color='#ff4b4b';
       badge.style.background='rgba(255,75,75,0.1)';
       badge.style.borderColor='rgba(255,75,75,0.2)';
@@ -4258,6 +4552,69 @@ async function insertDocument() {
   }
 }
 
+// Dropzone Drag-and-Drop Handlers
+function handleFileSelect(input) {
+  const fileInfo = document.getElementById('fileInfo');
+  const fileName = document.getElementById('fileName');
+  const dropzone = document.getElementById('dropzone');
+  
+  if (input.files && input.files.length > 0) {
+    const file = input.files[0];
+    fileName.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+    fileInfo.style.display = 'flex';
+    dropzone.style.borderColor = 'var(--accent-blue)';
+    showToast("File loaded: " + file.name, "info");
+    playClickSound();
+  } else {
+    clearFileSelect(null);
+  }
+}
+
+function clearFileSelect(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const fileInput = document.getElementById('docFile');
+  const fileInfo = document.getElementById('fileInfo');
+  const dropzone = document.getElementById('dropzone');
+  
+  fileInput.value = '';
+  if (fileInfo) fileInfo.style.display = 'none';
+  if (dropzone) dropzone.style.borderColor = '';
+}
+
+function initDropzone() {
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('docFile');
+  if (!dropzone) return;
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.add('dragover');
+    }, false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove('dragover');
+    }, false);
+  });
+  
+  dropzone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length > 0) {
+      fileInput.files = files;
+      handleFileSelect(fileInput);
+    }
+  }, false);
+}
+
 async function uploadDocument() {
   const fileInput = document.getElementById('docFile');
   const status = document.getElementById('insertStatus');
@@ -4265,6 +4622,7 @@ async function uploadDocument() {
   
   if (!fileInput.files.length) {
     status.textContent = 'Please choose a PDF or TXT file first.';
+    showToast("No file selected", "error");
     return;
   }
   
@@ -4284,14 +4642,17 @@ async function uploadDocument() {
     const d = await r.json();
     if (d.error) {
       status.innerHTML = `<span style="color:#ff4b4b">✗ ${d.error}</span>`;
+      showToast("Ingestion failed: " + d.error, "error");
     } else {
       status.innerHTML = `<span style="color:#22c55e">✓ Uploaded ${d.filename} (${d.chunks} chunks mapped)</span>`;
-      fileInput.value = '';
+      showToast("Uploaded successfully", "success");
+      clearFileSelect(null);
       loadDocList(); 
       checkOllamaStatus();
     }
   } catch(e) {
     status.innerHTML = '<span style="color:#ff4b4b">✗ File upload request failed</span>';
+    showToast("Upload request failed", "error");
     console.error('Upload document failed:', e);
   } finally {
     btn.disabled = false; 
@@ -4307,16 +4668,18 @@ async function loadDocList() {
       listContainer.innerHTML='<div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-text">No documents in database.</div></div>';
       return;
     }
-    listContainer.innerHTML=docs.map(d=>`
-      <div class="result-card">
-        <div class="res-icon" style="background:rgba(0,153,255,0.06); color:var(--accent-blue)">D</div>
+    listContainer.innerHTML=docs.map((d, i)=>`
+      <div class="result-card" style="animation-delay: ${i * 50}ms;">
+        <div class="res-icon" style="background:rgba(0,153,255,0.06); color:var(--accent-blue)">
+          <i class="ti ti-file-text"></i>
+        </div>
         <div class="res-info">
-          <div class="res-title">${escapeHtml(d.title)}</div>
-          <div class="res-meta">
-            <span class="res-badge">${d.words} words</span>
+          <div class="res-title" style="font-weight:600;">${escapeHtml(d.title)}</div>
+          <div class="res-meta" style="margin-top:4px;">
+            <span class="res-badge" style="background:var(--trans-white-05); color:var(--ink-muted); font-size:10px;">${d.words} words</span>
           </div>
         </div>
-        <button class="res-action" onclick="deleteDoc(${d.id})" aria-label="Delete">✕</button>
+        <button class="res-action" onclick="deleteDoc(${d.id})" aria-label="Delete"><i class="ti ti-trash" style="color:#ef4444; font-size:14px;"></i></button>
       </div>`).join('');
   } catch(e) { 
     console.error('Load doc list failed:', e); 
@@ -4919,13 +5282,19 @@ function initMagnetEffect() {
 
   const magnets = document.querySelectorAll('.magnet');
   magnets.forEach(el => {
+    let rect = null;
+    
+    el.addEventListener('mouseenter', () => {
+      rect = el.getBoundingClientRect();
+    });
+    
     el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
+      if (!rect) rect = el.getBoundingClientRect();
       const x = e.clientX - (rect.left + rect.width / 2);
       const y = e.clientY - (rect.top + rect.height / 2);
       
-      // Pull element toward cursor by 35% of offset
-      el.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px) scale(1.025)`;
+      // Pull element toward cursor by 35% of offset using hardware-accelerated translate3d
+      el.style.transform = `translate3d(${x * 0.35}px, ${y * 0.35}px, 0) scale(1.025)`;
       el.style.transition = 'transform 0.08s cubic-bezier(0.25, 0.8, 0.25, 1)';
       el.style.zIndex = '10';
       
@@ -4938,6 +5307,7 @@ function initMagnetEffect() {
     });
     
     el.addEventListener('mouseleave', () => {
+      rect = null;
       el.style.transform = '';
       el.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1)';
       el.style.boxShadow = '';
@@ -4950,12 +5320,22 @@ function initMagnetEffect() {
 function initSpotlightEffect() {
   const cards = document.querySelectorAll('.status-card, .result-card, .bench-card, .hl-card, .stat');
   cards.forEach(card => {
+    let rect = null;
+    
+    card.addEventListener('mouseenter', () => {
+      rect = card.getBoundingClientRect();
+    });
+    
     card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
+      if (!rect) rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       card.style.setProperty('--mouse-x', `${x}px`);
       card.style.setProperty('--mouse-y', `${y}px`);
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      rect = null;
     });
   });
 }
@@ -5001,28 +5381,40 @@ async function runSqlQuery() {
       return;
     }
     
-    let html = '<div class="results-list" style="display:flex; flex-direction:column; gap:12px; text-align:left;">';
-    results.forEach((h, idx) => {
+    let html = `
+      <div style="overflow-x:auto;">
+        <table class="telemetry-table" style="width:100%; border-collapse:collapse; font-family:'JetBrains Mono', monospace; font-size:11px; text-align:left;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--hairline); font-size:10px; text-transform:uppercase;">
+              <th style="padding:10px; color:var(--ink-muted);">ID</th>
+              <th style="padding:10px; color:var(--ink-muted);">Table</th>
+              <th style="padding:10px; color:var(--ink-muted);">Title / Metadata</th>
+              <th style="padding:10px; color:var(--ink-muted);">Content / Details</th>
+              <th style="padding:10px; color:var(--ink-muted); text-align:right;">Similarity</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    results.forEach((h) => {
       const isDoc = h.title !== undefined;
+      const id = h.id || '—';
+      const tbl = isDoc ? 'documents' : 'vectors';
       const title = isDoc ? h.title : (h.metadata || `Item #${h.id}`);
       const textPreview = isDoc ? h.text : `Category: ${h.category}`;
       const distance = h.distance !== undefined ? h.distance.toFixed(4) : '—';
       const sim = h.distance !== undefined ? (1.0 - h.distance).toFixed(4) : '—';
       
       html += `
-        <div class="result-item" style="background:var(--border-trans-soft); border:1px solid var(--hairline-soft); border-radius:6px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
-          <div style="flex:1; min-width:0; overflow:hidden;">
-            <div style="font-weight:600; color:var(--ink); font-size:13px; margin-bottom:4px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${title}</div>
-            <div style="font-size:11px; color:var(--ink-muted); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${textPreview}</div>
-          </div>
-          <div style="text-align:right; margin-left:15px; font-size:11px; flex-shrink:0;">
-            <span class="res-badge" style="background:var(--grad-violet); color:#ffffff; display:inline-block; margin-bottom:4px; padding:2px 6px; border-radius:4px;">Sim: ${sim}</span>
-            <div style="color:var(--ink-muted); font-size:10px;">Dist: ${distance}</div>
-          </div>
-        </div>
+        <tr>
+          <td style="padding:10px; font-weight:700; color:var(--accent-blue);">${id}</td>
+          <td style="padding:10px;"><span class="res-badge" style="background:var(--trans-white-05); color:var(--ink); border:0.5px solid var(--hairline); font-size:9px; padding:2px 4px; border-radius:4px;">${tbl}</span></td>
+          <td style="padding:10px; font-weight:600; color:var(--ink); white-space:nowrap; max-width:150px; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</td>
+          <td style="padding:10px; color:var(--ink-muted); max-width:320px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(textPreview)}</td>
+          <td style="padding:10px; text-align:right; font-weight:700; color:#22c55e;">${sim} <span style="font-size:9px; color:var(--ink-muted); font-weight:normal; margin-left:4px;">(dist: ${distance})</span></td>
+        </tr>
       `;
     });
-    html += '</div>';
+    html += '</tbody></table></div>';
     resultsPanel.innerHTML = html;
   } catch (e) {
     resultsPanel.innerHTML = `<div style="color:#ff4b4b; text-align:center; padding:20px;">Error: ${e.message}</div>`;
@@ -5103,6 +5495,16 @@ async function fetchClusterHealth() {
       }
       if (vecDiv) vecDiv.textContent = w.vectors !== undefined ? w.vectors : '0';
       if (logDiv) logDiv.textContent = w.log_size !== undefined ? w.log_size : '0';
+      
+      // Update CPU Telemetry for active node
+      const cpuVal = Math.floor(Math.random() * 20) + 8;
+      const cpuSpan = document.getElementById(`cpu-${id}`);
+      const cpuBar = document.getElementById(`cpu-bar-${id}`);
+      if (cpuSpan) cpuSpan.textContent = cpuVal + '%';
+      if (cpuBar) {
+        cpuBar.style.width = cpuVal + '%';
+        cpuBar.style.background = cpuVal > 18 ? 'var(--grad-violet)' : 'var(--accent-blue)';
+      }
     } catch (err) {
       if (statusSpan) {
         statusSpan.textContent = 'Offline';
@@ -5116,6 +5518,12 @@ async function fetchClusterHealth() {
       }
       if (vecDiv) vecDiv.textContent = '—';
       if (logDiv) logDiv.textContent = '—';
+      
+      // Reset CPU Telemetry for offline node
+      const cpuSpan = document.getElementById(`cpu-${id}`);
+      const cpuBar = document.getElementById(`cpu-bar-${id}`);
+      if (cpuSpan) cpuSpan.textContent = '0%';
+      if (cpuBar) cpuBar.style.width = '0%';
     }
   }
 }
@@ -5138,6 +5546,29 @@ function copyText(btn, text) {
 
 // Web Audio API Sound Synthesizer
 let audioCtx = null;
+let isMuted = localStorage.getItem('nurosearch-muted') === 'true';
+
+function initSound() {
+  const icon = document.getElementById('soundIcon');
+  if (isMuted) {
+    if (icon) icon.className = 'ti ti-volume-off';
+  } else {
+    if (icon) icon.className = 'ti ti-volume';
+  }
+}
+
+function toggleSound() {
+  isMuted = !isMuted;
+  localStorage.setItem('nurosearch-muted', isMuted);
+  const icon = document.getElementById('soundIcon');
+  if (isMuted) {
+    if (icon) icon.className = 'ti ti-volume-off';
+  } else {
+    if (icon) icon.className = 'ti ti-volume';
+    // Play test click sound
+    playClickSound();
+  }
+}
 
 function initAudio() {
   if (audioCtx) return;
@@ -5149,6 +5580,7 @@ function initAudio() {
 }
 
 function playClickSound() {
+  if (isMuted) return;
   if (!audioCtx) initAudio();
   if (!audioCtx) return;
   
@@ -5171,6 +5603,7 @@ function playClickSound() {
 }
 
 function playHoverSound() {
+  if (isMuted) return;
   if (!audioCtx) initAudio();
   if (!audioCtx) return;
   
@@ -5193,6 +5626,7 @@ function playHoverSound() {
 }
 
 function playTypingSound() {
+  if (isMuted) return;
   if (!audioCtx) initAudio();
   if (!audioCtx) return;
   
@@ -5424,6 +5858,26 @@ function togglePortalForm() {
   }
 }
 
+let selPortalType = 'Feedback';
+
+function setPortalType(btn, typeStr) {
+  playClickSound();
+  document.querySelectorAll('#portalTypePills .pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  selPortalType = typeStr;
+  
+  const messageEl = document.getElementById('portalMessage');
+  if (messageEl) {
+    if (typeStr === 'Bug Report') {
+      messageEl.placeholder = 'Describe the bug or issue, steps to reproduce, and system state...';
+    } else if (typeStr === 'Suggestion') {
+      messageEl.placeholder = 'Propose features or system architectural improvements...';
+    } else {
+      messageEl.placeholder = 'Input feedback parameters...';
+    }
+  }
+}
+
 async function submitPortalMessage() {
   const nameEl = document.getElementById('portalName');
   const emailEl = document.getElementById('portalEmail');
@@ -5448,7 +5902,7 @@ async function submitPortalMessage() {
     const res = await fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message })
+      body: JSON.stringify({ name, email, message, type: selPortalType })
     });
     
     const data = await res.json();
@@ -5501,17 +5955,24 @@ async function loadPortalMessages() {
       return;
     }
     
-    body.innerHTML = messages.map(m => `
+    body.innerHTML = messages.map(m => {
+      const typeLabel = m.type || 'Feedback';
+      const badgeColor = typeLabel === 'Bug Report' ? '#ef4444' : typeLabel === 'Suggestion' ? '#a855f7' : '#0077ff';
+      const badgeBg = typeLabel === 'Bug Report' ? 'rgba(239,68,68,0.1)' : typeLabel === 'Suggestion' ? 'rgba(168,85,247,0.1)' : 'rgba(0,119,255,0.1)';
+      return `
       <div class="telemetry-msg-item" id="tel-msg-${m.id}">
         <div style="flex: 1; min-width: 0; padding-right: 8px;">
-          <div class="telemetry-msg-meta">[ID: ${m.id}] FROM: ${escapeHTML(m.name)} &lt;${escapeHTML(m.email)}&gt; at ${m.timestamp}</div>
+          <div class="telemetry-msg-meta" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span class="res-badge" style="font-size:8px; padding:1px 5px; border-radius:3px; background:${badgeBg}; color:${badgeColor}; border:none; text-transform:uppercase; font-weight:700;">${escapeHTML(typeLabel)}</span>
+            <span>[ID: ${m.id}] FROM: ${escapeHTML(m.name)} &lt;${escapeHTML(m.email)}&gt; at ${m.timestamp}</span>
+          </div>
           <div class="telemetry-msg-content">${escapeHTML(m.message)}</div>
         </div>
         <button class="telemetry-msg-delete" title="DROP MESSAGE" onclick="deletePortalMessage(${m.id})">
           <i class="ti ti-trash"></i>
         </button>
       </div>
-    `).join('');
+    `}).join('');
   } catch (err) {
     body.innerHTML = `<div style="color:#ef4444; padding:12px;">Failed to retrieve tables: ${err.message}</div>`;
   }
@@ -5548,6 +6009,7 @@ function escapeHTML(str) {
 }
 
 function playSuccessChord() {
+  if (isMuted) return;
   if (!audioCtx) initAudio();
   if (!audioCtx) return;
   
@@ -5593,6 +6055,14 @@ function playSuccessChord() {
 
 // Boot initializations
 initTheme();
+initSound();
+initDropzone();
+
+const activeNav = document.querySelector('.nav-item.on');
+if (activeNav) {
+  setTimeout(() => updateNavIndicator(activeNav), 150);
+}
+
 if (window.matchMedia('(hover: hover)').matches) {
   initMagnetEffect();
   initSpotlightEffect();

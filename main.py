@@ -472,9 +472,14 @@ class SQLiteDB:
                 name TEXT NOT NULL,
                 email TEXT NOT NULL,
                 message TEXT NOT NULL,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                type TEXT DEFAULT 'Feedback'
             )
         """)
+        try:
+            self.cursor.execute("ALTER TABLE contact_messages ADD COLUMN type TEXT DEFAULT 'Feedback'")
+        except Exception:
+            pass
         self.conn.commit()
 
     def insert_vector(self, metadata, category, embedding):
@@ -519,11 +524,11 @@ class SQLiteDB:
             self.conn.rollback()
             return False
 
-    def insert_contact_message(self, name, email, message):
+    def insert_contact_message(self, name, email, message, msg_type="Feedback"):
         try:
             self.cursor.execute(
-                "INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)",
-                (name, email, message)
+                "INSERT INTO contact_messages (name, email, message, type) VALUES (?, ?, ?, ?)",
+                (name, email, message, msg_type)
             )
             self.conn.commit()
             return self.cursor.lastrowid
@@ -533,11 +538,16 @@ class SQLiteDB:
 
     def get_contact_messages(self):
         try:
-            self.cursor.execute("SELECT id, name, email, message, timestamp FROM contact_messages ORDER BY timestamp DESC")
+            self.cursor.execute("SELECT id, name, email, message, timestamp, type FROM contact_messages ORDER BY timestamp DESC")
             rows = self.cursor.fetchall()
-            return [{"id": r[0], "name": r[1], "email": r[2], "message": r[3], "timestamp": r[4]} for r in rows]
+            return [{"id": r[0], "name": r[1], "email": r[2], "message": r[3], "timestamp": r[4], "type": r[5]} for r in rows]
         except Exception:
-            return []
+            try:
+                self.cursor.execute("SELECT id, name, email, message, timestamp FROM contact_messages ORDER BY timestamp DESC")
+                rows = self.cursor.fetchall()
+                return [{"id": r[0], "name": r[1], "email": r[2], "message": r[3], "timestamp": r[4], "type": "Feedback"} for r in rows]
+            except Exception:
+                return []
 
     def delete_contact_message(self, id_):
         try:
@@ -1855,11 +1865,12 @@ def post_contact():
     name = data.get("name", "").strip()
     email = data.get("email", "").strip()
     message = data.get("message", "").strip()
+    msg_type = data.get("type", "Feedback").strip()
     
     if not name or not email or not message:
         return jsonify({"error": "Name, email and message are required"}), 400
         
-    msg_id = sqlite_db.insert_contact_message(name, email, message)
+    msg_id = sqlite_db.insert_contact_message(name, email, message, msg_type)
     if msg_id:
         return jsonify({"success": True, "message_id": msg_id, "message": "Message received! Thank you."})
     else:
