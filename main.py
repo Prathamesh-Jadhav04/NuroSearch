@@ -1757,73 +1757,126 @@ def execute_api_call(api_call, vector_param, text_query="", table="vectors"):
     k = params.get("k", 5)
     
     if table.lower() == "documents":
-        dims = doc_db.get_dims() or 768
-        if text_query:
-            q = ollama.embed(text_query)
-        elif vector_param:
-            try:
-                q = [float(x) for x in vector_param.split(",") if x]
-            except Exception:
-                q = [0.0] * dims
+        if not vector_param and not text_query:
+            # Direct retrieval from database
+            docs = doc_db.all()
+            out_hits = []
+            for doc in docs:
+                out_hits.append({
+                    "id": doc["id"],
+                    "title": doc["title"],
+                    "text": doc["text"],
+                    "distance": 0.0,
+                    "embedding": doc["emb"]
+                })
+            return out_hits[:k]
         else:
-            q = [0.0] * dims
-            
-        if not q or len(q) != dims:
-            q = [0.0] * dims
-            
-        hits = doc_db.search(q, k, algo=params.get("algo", "hnsw"))
-        
-        out_hits = []
-        for dist, doc in hits:
-            sim = 1.0 - dist
-            min_sim = params.get("min_similarity")
-            if min_sim and sim < min_sim:
-                continue
+            dims = doc_db.get_dims() or 768
+            if text_query:
+                try:
+                    q = ollama.embed(text_query)
+                except Exception:
+                    q = [0.0] * dims
+            elif vector_param:
+                try:
+                    q = [float(x) for x in vector_param.split(",") if x]
+                except Exception:
+                    q = [0.0] * dims
+            else:
+                q = [0.0] * dims
                 
-            out_hits.append({
-                "id": doc["id"],
-                "title": doc["title"],
-                "text": doc["text"],
-                "distance": dist,
-                "embedding": doc["emb"]
-            })
-        return out_hits
+            if not q or len(q) != dims:
+                q = [0.0] * dims
+                
+            # If min_similarity is set, retrieve a larger pool to satisfy threshold filtering
+            search_k = max(k * 5, 50) if params.get("min_similarity") else k
+            hits = doc_db.search(q, search_k, algo=params.get("algo", "hnsw"))
+            
+            out_hits = []
+            for dist, doc in hits:
+                sim = 1.0 - dist
+                min_sim = params.get("min_similarity")
+                if min_sim and sim < min_sim:
+                    continue
+                    
+                out_hits.append({
+                    "id": doc["id"],
+                    "title": doc["title"],
+                    "text": doc["text"],
+                    "distance": dist,
+                    "embedding": doc["emb"]
+                })
+            return out_hits[:k]
     else:
         dims = DIMS
-        if vector_param:
-            try:
-                q = [float(x) for x in vector_param.split(",") if x]
-            except Exception:
+        if not vector_param and not text_query:
+            # Direct retrieval from database
+            vectors = db.all()
+            category_filter = params.get("filter_category")
+            min_sim = params.get("min_similarity")
+            
+            hits = []
+            for v in vectors:
+                if category_filter and v["category"].lower() != category_filter.lower():
+                    continue
+                sim = 1.0
+                if min_sim and sim < min_sim:
+                    continue
+                hits.append({
+                    "id": v["id"],
+                    "metadata": v["metadata"],
+                    "category": v["category"],
+                    "distance": 0.0,
+                    "embedding": v["emb"]
+                })
+            return hits[:k]
+        else:
+            if vector_param:
+                try:
+                    q = [float(x) for x in vector_param.split(",") if x]
+                except Exception:
+                    q = [random.gauss(0, 1) for _ in range(dims)]
+                    mag = sum(x**2 for x in q) ** 0.5
+                    if mag > 0:
+                        q = [x / mag for x in q]
+            else:
                 q = [random.gauss(0, 1) for _ in range(dims)]
                 mag = sum(x**2 for x in q) ** 0.5
                 if mag > 0:
                     q = [x / mag for x in q]
-        else:
-            q = [random.gauss(0, 1) for _ in range(dims)]
-            mag = sum(x**2 for x in q) ** 0.5
-            if mag > 0:
-                q = [x / mag for x in q]
+                    
+            if not q or len(q) != dims:
+                q = [0.0] * dims
                 
-        out = db.search(q, k, params.get("metric", "cosine"), params.get("algo", "hnsw"))
-        
-        category_filter = params.get("filter_category")
-        min_sim = params.get("min_similarity")
-        
-        hits = []
-        for h in out["hits"]:
-            if category_filter and h["cat"].lower() != category_filter.lower():
-                continue
-            sim = 1.0 - h["dist"]
-            if min_sim and sim < min_sim:
-                continue
-            hits.append({
-                "id": h["id"],
-                "metadata": h["meta"],
-                "category": h["cat"],
-                "distance": h["dist"],
-                "embedding": h["emb"]
-            })
-        return hits
+            category_filter = params.get("filter_category")
+            min_sim = params.get("min_similarity")
+            
+            # Post-filtering can drop many items. Search with larger K if category or similarity filters are present.
+            search_k = max(k * 10, 100) if (category_filter or min_sim) else k
+            
+            algo = params.get("algo", "hnsw")
+            metric = params.get("metric", "cosine")
+            
+            if algo.lower() == "hybrid" and text_query:
+                out = db.hybrid_search(q, text_query, search_k, metric)
+            else:
+                out = db.search(q, search_k, metric, algo)
+                
+            hits = []
+            for h in out["hits"]:
+                if category_filter and h["cat"].lower() != category_filter.lower():
+                    continue
+                sim = 1.0 - h["dist"]
+                if min_sim and sim < min_sim:
+                    continue
+                hits.append({
+                    "id": h["id"],
+                    "metadata": h["meta"],
+                    "category": h["cat"],
+                    "distance": h["dist"],
+                    "embedding": h["emb"]
+                })
+            return hits[:k]
 
 @app.route("/query", methods=["POST"])
 def sql_query():
