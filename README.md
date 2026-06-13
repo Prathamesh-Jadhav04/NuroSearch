@@ -8,6 +8,17 @@ pinned: false
 ---
 # NuroSearch 🔍
 
+<div align="center" style="margin: 25px 0;">
+  <a href="https://huggingface.co/spaces/Prathamesh-Jadhav04/NuroSearch" target="_blank" rel="noopener noreferrer">
+    <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" width="100%" height="4px" />
+    <br/><br/>
+    <img src="https://img.shields.io/badge/⚡%20LIVE%20DEMO-OPEN%20IN%20HUGGING%20FACE%20SPACES-6a4cf5?style=for-the-badge&logo=huggingface&logoColor=yellow" alt="NuroSearch Live Demo" height="50" />
+    <br/><br/>
+    <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" width="100%" height="4px" />
+  </a>
+</div>
+
+
 <p align="center">
   <a href="https://github.com/Prathamesh-Jadhav04/NuroSearch/actions/workflows/ci.yml">
     <img src="https://github.com/Prathamesh-Jadhav04/NuroSearch/actions/workflows/ci.yml/badge.svg" alt="CI Status" />
