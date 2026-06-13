@@ -1,3 +1,11 @@
+---
+title: NuroSearch
+emoji: 🔍
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
 # NuroSearch 🔍
 
 <p align="center">
