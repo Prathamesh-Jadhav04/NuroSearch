@@ -7,3 +7,31 @@ pypdf>=4.0,<5.0
 
 # Optional: Redis caching (gracefully disabled if unavailable)
 redis>=5.0,<6.0
+
+# IVF-PQ Quantization Engine
+scikit-learn>=1.0
+numpy>=1.20
+
+# Cross-Encoder Re-Ranker
+sentence-transformers>=2.7.0
+
+# GPU Search (falls back to CPU if CUDA unavailable)
+torch>=2.0
+
+# SQL-like Query Parser
+sly>=0.5
+
+# HTTP client (used by coordinator, knowledge_graph, ingestion_worker)
+requests>=2.28
+
+# Testing
+pytest>=7.0
+
+# Optional: Knowledge Graph (Neo4j) — gracefully disabled if unavailable
+# neo4j>=5.0
+
+# Optional: Kafka async ingestion — gracefully disabled if unavailable
+# kafka-python>=2.0
+
+# Optional: Distributed consensus (worker nodes) — only needed for cluster mode
+# pysyncobj>=0.3

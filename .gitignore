@@ -20,6 +20,8 @@ env/
 vectors.db
 vectors.db-wal
 vectors.db-shm
+data/
+benchmark_report.json
 
 # IDE files
 .vscode/
@@ -44,6 +46,8 @@ server_err.txt
 # AI agent files
 .opencode/
 *.plan.md
+.agents/
+skills-lock.json
 
 # Screenshots
 Screenshot/
