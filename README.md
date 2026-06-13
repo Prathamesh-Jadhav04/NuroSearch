@@ -1,3 +1,13 @@
+---
+title: NuroSearch
+emoji: 🔍
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 8080
+pinned: false
+---
+
 # NuroSearch 🔍 — Distributed Custom Vector Database & RAG Engine
 
 <div align="center" style="margin: 25px 0;">
