@@ -466,6 +466,15 @@ class SQLiteDB:
                 embedding TEXT NOT NULL
             )
         """)
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS contact_messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                message TEXT NOT NULL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         self.conn.commit()
 
     def insert_vector(self, metadata, category, embedding):
@@ -504,6 +513,35 @@ class SQLiteDB:
     def delete_document(self, id_):
         try:
             self.cursor.execute("DELETE FROM documents WHERE id = ?", (id_,))
+            self.conn.commit()
+            return self.cursor.rowcount > 0
+        except Exception:
+            self.conn.rollback()
+            return False
+
+    def insert_contact_message(self, name, email, message):
+        try:
+            self.cursor.execute(
+                "INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)",
+                (name, email, message)
+            )
+            self.conn.commit()
+            return self.cursor.lastrowid
+        except Exception:
+            self.conn.rollback()
+            return None
+
+    def get_contact_messages(self):
+        try:
+            self.cursor.execute("SELECT id, name, email, message, timestamp FROM contact_messages ORDER BY timestamp DESC")
+            rows = self.cursor.fetchall()
+            return [{"id": r[0], "name": r[1], "email": r[2], "message": r[3], "timestamp": r[4]} for r in rows]
+        except Exception:
+            return []
+
+    def delete_contact_message(self, id_):
+        try:
+            self.cursor.execute("DELETE FROM contact_messages WHERE id = ?", (id_,))
             self.conn.commit()
             return self.cursor.rowcount > 0
         except Exception:
@@ -1072,6 +1110,35 @@ def status():
         "demoDims": DIMS,
         "demoCount": db.size(),
     })
+
+# ── CLUSTER HEALTH PROXY ROUTES ──
+@app.route("/cluster/coordinator/health")
+def cluster_coordinator_health():
+    try:
+        req = urllib.request.Request("http://127.0.0.1:8090/health", method="GET")
+        with urllib.request.urlopen(req, timeout=2) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return jsonify(data)
+    except Exception as e:
+        return jsonify({"status": "down", "error": str(e)}), 502
+
+@app.route("/cluster/worker/<node_id>/health")
+def cluster_worker_health(node_id):
+    worker_ports = {
+        "worker-1": 8081,
+        "worker-2": 8082,
+        "worker-3": 8083
+    }
+    port = worker_ports.get(node_id)
+    if not port:
+        return jsonify({"status": "error", "message": "Unknown node_id"}), 404
+    try:
+        req = urllib.request.Request(f"http://127.0.0.1:{port}/health", method="GET")
+        with urllib.request.urlopen(req, timeout=2) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return jsonify(data)
+    except Exception as e:
+        return jsonify({"status": "down", "error": str(e)}), 502
 
 @app.route("/search")
 def search():
@@ -1781,6 +1848,53 @@ def sql_query():
         })
     except Exception as e:
         return jsonify({"error": str(e), "query": query_string}), 400
+
+@app.route("/api/contact", methods=["POST"])
+def post_contact():
+    data = request.get_json(silent=True) or {}
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    message = data.get("message", "").strip()
+    
+    if not name or not email or not message:
+        return jsonify({"error": "Name, email and message are required"}), 400
+        
+    msg_id = sqlite_db.insert_contact_message(name, email, message)
+    if msg_id:
+        return jsonify({"success": True, "message_id": msg_id, "message": "Message received! Thank you."})
+    else:
+        return jsonify({"error": "Failed to save message to database"}), 500
+
+@app.route("/api/contact", methods=["GET"])
+def get_contacts():
+    messages = sqlite_db.get_contact_messages()
+    return jsonify(messages)
+
+@app.route("/api/contact/<int:msg_id>", methods=["DELETE"])
+def delete_contact(msg_id):
+    success = sqlite_db.delete_contact_message(msg_id)
+    if success:
+        return jsonify({"success": True})
+    else:
+        return jsonify({"error": "Message not found or failed to delete"}), 404
+
+@app.route("/api/contact/vcard")
+def get_vcard():
+    vcard_data = """BEGIN:VCARD
+VERSION:3.0
+N:Jadhav;Prathamesh;;;
+FN:Prathamesh Jadhav
+ORG:NuroSearch
+TITLE:Creator & Lead Architect
+EMAIL;TYPE=PREF,INTERNET:Prathamesh.jadhav.office@gmail.com
+URL:https://github.com/Prathamesh-Jadhav04
+URL:https://linkedin.com/in/prathamesh-jadhav04
+END:VCARD"""
+    return Response(
+        vcard_data,
+        mimetype="text/vcard",
+        headers={"Content-Disposition": "attachment; filename=prathamesh_jadhav.vcf"}
+    )
 
 # =====================================================================
 #  MAIN
