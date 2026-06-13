@@ -19,6 +19,6 @@ COPY . .
 RUN useradd -m -u 1000 nurosearch && chown -R nurosearch:nurosearch /app
 USER nurosearch
 
-EXPOSE 8080
+EXPOSE 7860
 
 CMD ["python", "main.py"]

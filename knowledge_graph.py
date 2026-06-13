@@ -20,7 +20,7 @@ class KnowledgeGraph:
         self.driver = None
         try:
             from neo4j import GraphDatabase
-            self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+            self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD), connection_timeout=2.0)
             # Test connection with a short timeout
             with self.driver.session() as session:
                 session.run("RETURN 1")

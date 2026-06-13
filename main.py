@@ -36,11 +36,11 @@ try:
     import redis
     redis_url = os.environ.get('REDIS_URL')
     if redis_url:
-        redis_client = redis.Redis.from_url(redis_url, decode_responses=True)
+        redis_client = redis.Redis.from_url(redis_url, decode_responses=True, socket_connect_timeout=2)
     else:
         redis_host = os.environ.get('REDIS_HOST', 'localhost')
         redis_port = int(os.environ.get('REDIS_PORT', 6379))
-        redis_client = redis.Redis(host=redis_host, port=redis_port, db=0, decode_responses=True)
+        redis_client = redis.Redis(host=redis_host, port=redis_port, db=0, decode_responses=True, socket_connect_timeout=2)
     redis_client.ping()
     REDIS_AVAILABLE = True
     print("Redis connected successfully.")
@@ -1787,9 +1787,11 @@ def sql_query():
 # =====================================================================
 
 if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 7860))
     ollama_up = ollama.is_available()
     print("=== VectorDB Engine ===")
-    print("http://localhost:8080")
+    print(f"http://localhost:{port}")
     print(f"{db.size()} demo vectors | {DIMS} dims | HNSW+KD-Tree+BruteForce+Hybrid")
     print(f"Ollama: {'ONLINE' if ollama_up else 'OFFLINE (install from ollama.com)'}")
     if ollama_up:
@@ -1800,9 +1802,9 @@ if __name__ == "__main__":
     atexit.register(sqlite_db.close)
 
     try:
-        app.run(host="0.0.0.0", port=8080, debug=False, threaded=True)
+        app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
     except OSError as e:
         if "address already in use" in str(e).lower():
-            print(f"ERROR: Port 8080 is already in use. Kill the process or use a different port.")
+            print(f"ERROR: Port {port} is already in use. Kill the process or use a different port.")
         else:
             raise

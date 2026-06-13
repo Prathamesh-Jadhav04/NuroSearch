@@ -2433,7 +2433,7 @@ textarea {
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
               <h3 style="font-family:'Outfit'; font-size:18px; font-weight:700; margin-bottom:4px;">Coordinator Node Status</h3>
-              <p style="font-size:12px; color:rgba(255,255,255,0.7);" id="coordinatorHost">Host: http://localhost:8080</p>
+              <p style="font-size:12px; color:rgba(255,255,255,0.7);" id="coordinatorHost">Host: Checking...</p>
             </div>
             <div style="text-align:right;">
               <span class="res-badge" id="coordinatorStatus" style="background:#00ff66; color:#000; font-weight:600; font-size:11px;">Checking...</span>
@@ -2577,7 +2577,7 @@ textarea {
 // ════════════════════════════════════════════════════════════
 //  CONSTANTS & STATE
 // ════════════════════════════════════════════════════════════
-const API  = 'http://localhost:8080';
+const API  = window.location.origin;
 const DIMS = 16;
 const COL  = { cs:'#E0E0E0', math:'#CCCCCC', food:'#B8B8B8', sports:'#A4A4A4', doc:'#909090', default:'#6E6E6E' };
 const COL_BG = { cs:'rgba(224,224,224,0.1)', math:'rgba(204,204,204,0.1)', food:'rgba(184,184,184,0.1)', sports:'rgba(164,164,164,0.1)', doc:'rgba(144,144,144,0.1)', default:'rgba(110,110,110,0.1)' };
@@ -4022,31 +4022,32 @@ async function fetchClusterHealth() {
     }
   });
 
-  // 1. Direct Ping to Coordinator (supports both port 8089 and port 8080)
+  // 1. Direct Ping to Coordinator (supports both port 8089 and fallback to main API)
   let coordOnline = false;
-  let coordPort = '8089';
+  let coordHostUrl = 'http://localhost:8089';
   try {
     const res = await fetch(`http://localhost:8089/health`);
     if (res.ok) {
       const data = await res.json();
       if (data.status === 'ok') {
         coordOnline = true;
+        coordHostUrl = 'http://localhost:8089';
       }
     }
   } catch (e) {
     try {
-      const res = await fetch(`http://localhost:8080/health`);
+      const res = await fetch(`${API}/health`);
       if (res.ok) {
         const data = await res.json();
         if (data.workers) { // coordinator health has a 'workers' field
           coordOnline = true;
-          coordPort = '8080';
+          coordHostUrl = API;
         }
       }
     } catch(err) {}
   }
 
-  if (coordHost) coordHost.textContent = `Host: http://localhost:${coordPort}`;
+  if (coordHost) coordHost.textContent = `Host: ${coordHostUrl}`;
   if (coordStatus) {
     if (coordOnline) {
       coordStatus.textContent = 'Online';

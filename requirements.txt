@@ -28,10 +28,10 @@ requests>=2.28
 pytest>=7.0
 
 # Optional: Knowledge Graph (Neo4j) — gracefully disabled if unavailable
-# neo4j>=5.0
+neo4j>=5.0
 
 # Optional: Kafka async ingestion — gracefully disabled if unavailable
-# kafka-python>=2.0
+kafka-python>=2.0
 
 # Optional: Distributed consensus (worker nodes) — only needed for cluster mode
-# pysyncobj>=0.3
+pysyncobj>=0.3
