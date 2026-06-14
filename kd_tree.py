@@ -47,6 +47,23 @@ class KDTree:
         return sorted([(-neg_d, id_) for neg_d, id_ in heap])
 
 def cosine_distance(a, b):
+    import numpy as np
+    if isinstance(a, np.ndarray) and isinstance(b, np.ndarray):
+        dot = np.dot(a, b)
+        na = np.linalg.norm(a)
+        nb = np.linalg.norm(b)
+        if na < 1e-9 or nb < 1e-9:
+            return 1.0
+        return float(1.0 - dot / (na * nb))
+    if len(a) > 64:
+        a_np = np.asarray(a, dtype=np.float32)
+        b_np = np.asarray(b, dtype=np.float32)
+        dot = np.dot(a_np, b_np)
+        na = np.linalg.norm(a_np)
+        nb = np.linalg.norm(b_np)
+        if na < 1e-9 or nb < 1e-9:
+            return 1.0
+        return float(1.0 - dot / (na * nb))
     dot = sum(x * y for x, y in zip(a, b))
     na = sum(x * x for x in a)
     nb = sum(x * x for x in b)

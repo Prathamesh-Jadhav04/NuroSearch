@@ -207,8 +207,10 @@ class IVFPQIndex:
         candidates = []
         for cluster_id in probe_clusters:
             for doc_id, pq_code in self.inverted_lists.get(cluster_id, []):
-                approx_dist = sum(lookup_table[m, pq_code[m]] for m in range(self.M))
-                candidates.append((float(approx_dist), doc_id))
+                approx_dist = 0.0
+                for m in range(self.M):
+                    approx_dist += lookup_table[m, pq_code[m]]
+                candidates.append((approx_dist, doc_id))
         
         candidates.sort(key=lambda x: x[0])
         return candidates[:k]

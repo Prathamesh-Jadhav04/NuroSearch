@@ -182,10 +182,34 @@ class BM25:
 #  DISTANCE METRICS
 # =====================================================================
 
+import numpy as np
+
 def euclidean(a, b):
+    if isinstance(a, np.ndarray) and isinstance(b, np.ndarray):
+        return float(np.linalg.norm(a - b))
+    if len(a) > 64:
+        a_np = np.asarray(a, dtype=np.float32)
+        b_np = np.asarray(b, dtype=np.float32)
+        return float(np.linalg.norm(a_np - b_np))
     return math.sqrt(sum((x - y) ** 2 for x, y in zip(a, b)))
 
 def cosine(a, b):
+    if isinstance(a, np.ndarray) and isinstance(b, np.ndarray):
+        dot = np.dot(a, b)
+        na = np.linalg.norm(a)
+        nb = np.linalg.norm(b)
+        if na < 1e-9 or nb < 1e-9:
+            return 1.0
+        return float(1.0 - dot / (na * nb))
+    if len(a) > 64:
+        a_np = np.asarray(a, dtype=np.float32)
+        b_np = np.asarray(b, dtype=np.float32)
+        dot = np.dot(a_np, b_np)
+        na = np.linalg.norm(a_np)
+        nb = np.linalg.norm(b_np)
+        if na < 1e-9 or nb < 1e-9:
+            return 1.0
+        return float(1.0 - dot / (na * nb))
     dot = sum(x * y for x, y in zip(a, b))
     na = sum(x * x for x in a)
     nb = sum(x * x for x in b)
@@ -194,6 +218,12 @@ def cosine(a, b):
     return 1.0 - dot / (math.sqrt(na) * math.sqrt(nb))
 
 def manhattan(a, b):
+    if isinstance(a, np.ndarray) and isinstance(b, np.ndarray):
+        return float(np.sum(np.abs(a - b)))
+    if len(a) > 64:
+        a_np = np.asarray(a, dtype=np.float32)
+        b_np = np.asarray(b, dtype=np.float32)
+        return float(np.sum(np.abs(a_np - b_np)))
     return sum(abs(x - y) for x, y in zip(a, b))
 
 def get_dist_fn(metric):
@@ -292,7 +322,9 @@ class HNSW:
         self.rng = random.Random(42)
 
     def _rand_level(self):
-        return int(math.floor(-math.log(self.rng.random()) * self.mL))
+        # Use a scaling factor based on base 6 for richer visual layering in demo/medium datasets
+        mL = 1.0 / math.log(6)
+        return int(math.floor(-math.log(self.rng.random()) * mL))
 
     def _search_layer(self, q, ep, ef, lyr, dist):
         vis = set()

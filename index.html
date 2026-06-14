@@ -2020,6 +2020,17 @@ textarea {
 @media (max-width: 900px) {
   .search-grid, .rag-layout {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .search-main-column, .search-sidebar-column {
+    min-width: 0;
+    width: 100%;
+  }
+  
+  .bench-matrix-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
   
   #aiSplitRow {
@@ -2680,7 +2691,9 @@ body.cursor-active [onclick] {
           </div>
         </div>
         
-        <div id="scatter3d"></div>
+        <div class="visualizer-scroll-wrapper" style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; border-radius: var(--radius-xl); border: 1px solid var(--hairline); background: var(--surface-1);">
+          <div id="scatter3d" style="margin-bottom: 0; border: none; border-radius: 0; min-width: 500px;"></div>
+        </div>
         
         <div class="search-grid">
           <!-- HNSW Layers Structure -->
@@ -3957,9 +3970,9 @@ function render3DPlot() {
     
     const scatterContainer = document.getElementById('scatter3d');
     if (scatterContainer.querySelector('.js-plotly-plot')) {
-      Plotly.react('scatter3d', [trace], layout, {responsive: true, displayModeBar: false});
+      Plotly.react('scatter3d', [trace], layout, {responsive: true, displayModeBar: true});
     } else {
-      Plotly.newPlot('scatter3d', [trace], layout, {responsive: true, displayModeBar: false});
+      Plotly.newPlot('scatter3d', [trace], layout, {responsive: true, displayModeBar: true});
     }
   } catch(e) {
     document.getElementById('scatter3d').innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ff4b4b;font-size:13px;">Plot error: ${e.message}</div>`;
