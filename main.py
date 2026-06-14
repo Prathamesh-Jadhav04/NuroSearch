@@ -1,9 +1,11 @@
 import os
 import json
 import urllib.request
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
+from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=".")
+CORS(app)
 
 class OllamaClient:
     def __init__(self, host=None, port=None):
@@ -47,12 +49,13 @@ class OllamaClient:
 ollama = OllamaClient()
 
 @app.route("/")
-def home():
-    return "OK"
+def index():
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/health")
 def health():
     return jsonify({
         "status": "healthy",
-        "ollama": "online" if ollama.is_available() else "offline"
+        "ollama": "online" if ollama.is_available() else "offline",
+        "has_index": os.path.exists(os.path.join(app.static_folder, "index.html"))
     }), 200
