@@ -19,13 +19,8 @@ from pypdf import PdfReader
 from ivfpq import IVFPQIndex
 from query_parser import NuroLexer, NuroParser, compile_to_api_call
 
-# Re-ranking
-try:
-    from reranker import CrossEncoderReranker
-    reranker = CrossEncoderReranker()
-except Exception as e:
-    print(f"Failed to import/initialize CrossEncoderReranker: {e}")
-    reranker = None
+# Re-ranking (Lazy Loaded)
+reranker = None
 
 # Try to import redis
 try:
@@ -1036,7 +1031,7 @@ sqlite_lock = None
 kg = None
 
 def init_app_context():
-    global db, doc_db, ollama, sqlite_db, sqlite_lock, kg, _initialized
+    global db, doc_db, ollama, sqlite_db, sqlite_lock, kg, reranker, _initialized
     with _init_lock:
         if _initialized:
             return
@@ -1053,6 +1048,14 @@ def init_app_context():
         from knowledge_graph import KnowledgeGraph
         kg = KnowledgeGraph()
         
+        # Initialize CrossEncoderReranker lazily
+        try:
+            from reranker import CrossEncoderReranker
+            reranker = CrossEncoderReranker()
+        except Exception as e:
+            print(f"Failed to import/initialize CrossEncoderReranker: {e}")
+            reranker = None
+            
         load_demo(db)
         _initialized = True
         print("[System] Application context initialized successfully.")
