@@ -12,9 +12,9 @@ RUN apt-get update && apt-get install -y \
 # Install Ollama (manually download and extract binary to avoid systemd/installer script errors)
 RUN curl -fsSL https://ollama.com/download/ollama-linux-amd64.tar.zst | tar -x --zstd -C /usr
 
-# Install Python dependencies (cached layer)
+# Install Python dependencies (cached layer with CPU PyTorch resolution)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Set Ollama model storage path and pre-download models (cached layer)
 ENV OLLAMA_MODELS=/app/ollama_models

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, Response
+from flask import Flask, request, jsonify, send_file, Response, send_from_directory
 from flask_cors import CORS
 import json
 import math
@@ -1042,7 +1042,15 @@ ivfpq_trained = True
 
 @app.route("/")
 def index():
-    return send_file("index.html")
+    return send_from_directory(app.static_folder, "index.html")
+
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy",
+        "ollama": "online" if ollama.is_available() else "offline",
+        "db_size": db.size()
+    }), 200
 
 @app.route("/stats")
 def stats():
