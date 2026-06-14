@@ -254,7 +254,7 @@ nurosearch/
 
 [![GitHub](https://img.shields.io/badge/GitHub-Prathamesh--Jadhav04-181717?logo=github)](https://github.com/Prathamesh-Jadhav04)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-prathameshjadhav04-0A66C2?logo=linkedin)](https://linkedin.com/in/prathameshjadhav04)
-[![Email](https://img.shields.io/badge/Email-prathameshjadhav4004@gmail.com-EA4335?logo=gmail)](mailto:prathameshjadhav4004@gmail.com)
+[![Email](https://img.shields.io/badge/Email-Prathamesh.jadhav.office@gmail.com-EA4335?logo=gmail)](mailto:Prathamesh.jadhav.office@gmail.com)
 
 ---
 
