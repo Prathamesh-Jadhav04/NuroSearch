@@ -3524,14 +3524,25 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
         
         <!-- Coordinator Health Status -->
         <div class="status-card grad-spot-card-violet" style="margin-bottom: 24px; padding: 20px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="cluster-header-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
             <div>
-              <h3 style="font-family:'Outfit'; font-size:18px; font-weight:700; margin-bottom:4px;">Coordinator Node Status</h3>
+              <h3 style="font-family:'Outfit'; font-size:18px; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+                <i class="ti ti-binary" style="color:#c7a2ff;"></i> Coordinator Node Status
+              </h3>
               <p style="font-size:12px; color:var(--ink-muted);" id="coordinatorHost">Host: Checking...</p>
             </div>
-            <div style="text-align:right;">
-              <span class="res-badge" id="coordinatorStatus" style="background:#00ff66; color:#000; font-weight:600; font-size:11px;">Checking...</span>
-              <button class="btn-secondary" onclick="fetchClusterHealth()" style="margin-left:12px; padding:6px 12px; font-size:11px; display:inline-block; vertical-align:middle;">Refresh Cluster</button>
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <!-- Manual Toggle -->
+              <label class="switch-container" style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none; background:rgba(255,255,255,0.03); border:1px solid var(--border-trans); padding:6px 12px; border-radius:30px;">
+                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:#00ff66; min-width:26px;" id="toggle-label-coordinator">ON</span>
+                <input type="checkbox" id="toggle-checkbox-coordinator" checked onclick="toggleNode('coordinator')" style="display:none;" />
+                <div class="switch-slider" id="slider-coordinator" style="width:34px; height:18px; background:#00ff66; border-radius:9px; position:relative; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                  <div class="switch-knob" id="knob-coordinator" style="width:14px; height:14px; background:#000; border-radius:50%; position:absolute; top:2px; left:18px; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                </div>
+              </label>
+              
+              <span class="res-badge" id="coordinatorStatus" style="background:#00ff66; color:#000; font-weight:600; font-size:11px; margin-bottom:0; padding:6px 12px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px;">Checking...</span>
+              <button class="btn-secondary" onclick="fetchClusterHealth()" style="padding:6px 12px; font-size:11px; border-radius:20px;">Refresh Cluster</button>
             </div>
           </div>
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-top:20px; border-top:1px solid var(--hairline-soft); padding-top:16px;">
@@ -3557,7 +3568,18 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
           <div class="status-card" id="card-worker-1" style="border:1px solid var(--border-trans); transition:all 0.3s ease;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;"><i class="ti ti-server" style="margin-right:6px; color:var(--accent-blue);"></i>worker-1</h4>
-              <span class="res-badge" id="status-worker-1" style="background:#ff4b4b; color:#fff; font-size:10px;">Offline</span>
+              
+              <div style="display:flex; align-items:center; gap:8px;">
+                <!-- Manual Toggle -->
+                <label class="switch-container" style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; user-select:none; background:rgba(255,255,255,0.02); border:1px solid var(--border-trans); padding:4px 8px; border-radius:20px;">
+                  <span style="font-size:9px; font-weight:700; text-transform:uppercase; color:#00ff66; min-width:20px;" id="toggle-label-worker-1">ON</span>
+                  <input type="checkbox" id="toggle-checkbox-worker-1" checked onclick="toggleNode('worker-1')" style="display:none;" />
+                  <div class="switch-slider" id="slider-worker-1" style="width:28px; height:15px; background:#00ff66; border-radius:7.5px; position:relative; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div class="switch-knob" id="knob-worker-1" style="width:11px; height:11px; background:#000; border-radius:50%; position:absolute; top:2px; left:15px; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                  </div>
+                </label>
+                <span class="res-badge" id="status-worker-1" style="background:#ff4b4b; color:#fff; font-size:10px; margin:0; padding:3px 8px; border-radius:10px;">Offline</span>
+              </div>
             </div>
             <div style="font-size:12px; color:var(--ink-muted); margin-bottom:12px;">
               <div>API: <span style="font-family:monospace;">http://127.0.0.1:8081</span></div>
@@ -3598,7 +3620,18 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
           <div class="status-card" id="card-worker-2" style="border:1px solid var(--border-trans); transition:all 0.3s ease;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;"><i class="ti ti-server" style="margin-right:6px; color:var(--accent-blue);"></i>worker-2</h4>
-              <span class="res-badge" id="status-worker-2" style="background:#ff4b4b; color:#fff; font-size:10px;">Offline</span>
+              
+              <div style="display:flex; align-items:center; gap:8px;">
+                <!-- Manual Toggle -->
+                <label class="switch-container" style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; user-select:none; background:rgba(255,255,255,0.02); border:1px solid var(--border-trans); padding:4px 8px; border-radius:20px;">
+                  <span style="font-size:9px; font-weight:700; text-transform:uppercase; color:#00ff66; min-width:20px;" id="toggle-label-worker-2">ON</span>
+                  <input type="checkbox" id="toggle-checkbox-worker-2" checked onclick="toggleNode('worker-2')" style="display:none;" />
+                  <div class="switch-slider" id="slider-worker-2" style="width:28px; height:15px; background:#00ff66; border-radius:7.5px; position:relative; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div class="switch-knob" id="knob-worker-2" style="width:11px; height:11px; background:#000; border-radius:50%; position:absolute; top:2px; left:15px; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                  </div>
+                </label>
+                <span class="res-badge" id="status-worker-2" style="background:#ff4b4b; color:#fff; font-size:10px; margin:0; padding:3px 8px; border-radius:10px;">Offline</span>
+              </div>
             </div>
             <div style="font-size:12px; color:var(--ink-muted); margin-bottom:12px;">
               <div>API: <span style="font-family:monospace;">http://127.0.0.1:8082</span></div>
@@ -3639,7 +3672,18 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
           <div class="status-card" id="card-worker-3" style="border:1px solid var(--border-trans); transition:all 0.3s ease;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600;"><i class="ti ti-server" style="margin-right:6px; color:var(--accent-blue);"></i>worker-3</h4>
-              <span class="res-badge" id="status-worker-3" style="background:#ff4b4b; color:#fff; font-size:10px;">Offline</span>
+              
+              <div style="display:flex; align-items:center; gap:8px;">
+                <!-- Manual Toggle -->
+                <label class="switch-container" style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; user-select:none; background:rgba(255,255,255,0.02); border:1px solid var(--border-trans); padding:4px 8px; border-radius:20px;">
+                  <span style="font-size:9px; font-weight:700; text-transform:uppercase; color:#00ff66; min-width:20px;" id="toggle-label-worker-3">ON</span>
+                  <input type="checkbox" id="toggle-checkbox-worker-3" checked onclick="toggleNode('worker-3')" style="display:none;" />
+                  <div class="switch-slider" id="slider-worker-3" style="width:28px; height:15px; background:#00ff66; border-radius:7.5px; position:relative; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div class="switch-knob" id="knob-worker-3" style="width:11px; height:11px; background:#000; border-radius:50%; position:absolute; top:2px; left:15px; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                  </div>
+                </label>
+                <span class="res-badge" id="status-worker-3" style="background:#ff4b4b; color:#fff; font-size:10px; margin:0; padding:3px 8px; border-radius:10px;">Offline</span>
+              </div>
             </div>
             <div style="font-size:12px; color:var(--ink-muted); margin-bottom:12px;">
               <div>API: <span style="font-family:monospace;">http://127.0.0.1:8083</span></div>
@@ -3677,17 +3721,39 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
           </div>
         </div>
 
-        <!-- Quick Start Tips -->
-        <div class="status-card" style="padding: 16px;">
-          <h4 style="font-family:'Outfit'; font-size:14px; font-weight:600; margin-bottom:8px; color:var(--accent-blue);">💡 Cluster setup tips</h4>
-          <p style="font-size:12px; color:var(--ink-muted); line-height:1.5; margin-bottom:8px;">
-            Consistent hashing and sharding requires all workers to run concurrently. To start the cluster:
-          </p>
-          <ul style="font-size:12px; color:var(--ink-muted); padding-left:16px; line-height:1.6;">
-            <li>Open three separate terminals and copy-paste each worker command to launch the nodes.</li>
-            <li>Launch the Coordinator (usually runs automatically via <code>coordinator.py</code> or as part of the container setup).</li>
-            <li>The nodes will automatically elect a **Raft Leader** (e.g., <i>Leader</i>) while other nodes will sync as <i>Follower</i>.</li>
-          </ul>
+        <!-- Tips Section -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-top:24px;">
+          <!-- Enhanced Cluster Setup Tips -->
+          <div class="status-card" style="padding: 20px; margin-bottom: 0;">
+            <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600; margin-bottom:12px; color:var(--accent-blue); display:flex; align-items:center; gap:8px;">
+              <i class="ti ti-settings" style="font-size:18px;"></i> Cluster Setup & Operations
+            </h4>
+            <p style="font-size:12px; color:var(--ink-muted); line-height:1.6; margin-bottom:10px;">
+              For maximum throughput and high availability, NuroSearch nodes should run concurrently. Follow these operational guidelines:
+            </p>
+            <ul style="font-size:12px; color:var(--ink-muted); padding-left:16px; line-height:1.7; display:flex; flex-direction:column; gap:6px;">
+              <li><strong>Terminal Setup:</strong> Launch three separate terminals and run each worker command to establish independent worker shards.</li>
+              <li><strong>Coordinator Binding:</strong> The coordinator routes write commands to specific shards using MD5 hashing, enabling horizontal scalability.</li>
+              <li><strong>Consensus Quorum:</strong> Raft requires a majority of nodes to be online (2 out of 3) to elect a leader and commit replicate logs. If a quorum is lost, writes are rejected to prevent split-brain.</li>
+              <li><strong>Auto-Recovery:</strong> Bringing an offline worker back online will trigger Raft catch-up, synchronizing its local index state automatically.</li>
+            </ul>
+          </div>
+
+          <!-- Uses of Cluster Tips -->
+          <div class="status-card" style="padding: 20px; margin-bottom: 0;">
+            <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600; margin-bottom:12px; color:#c7a2ff; display:flex; align-items:center; gap:8px;">
+              <i class="ti ti-layers-intersect" style="font-size:18px;"></i> Practical Uses of Cluster
+            </h4>
+            <p style="font-size:12px; color:var(--ink-muted); line-height:1.6; margin-bottom:10px;">
+              Distributed architectures like the NuroSearch Cluster solve several database and scalability challenges:
+            </p>
+            <ul style="font-size:12px; color:var(--ink-muted); padding-left:16px; line-height:1.7; display:flex; flex-direction:column; gap:6px;">
+              <li><strong>Horizontal Scale-Out:</strong> Sharding splits massive vector datasets across multiple workers, bypassing the single-machine RAM limits.</li>
+              <li><strong>Query Parallelism:</strong> Scatter-Gather searches workers in parallel, reducing search latencies for large-scale operations.</li>
+              <li><strong>High Availability (HA):</strong> Automatic leader election ensures index read operations stay online even if some worker shards fail.</li>
+              <li><strong>Consistent Hashing Routing:</strong> Minimizes data movement when worker nodes are added or removed, ensuring stable partition boundaries.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </main>
@@ -3725,6 +3791,56 @@ let allItems = [], pcaPoints3D = [];
 let selAlgo = 'hnsw', selMetric = 'cosine', searchResults = [];
 let recentVectors = [];
 let clusterInterval = null;
+
+const nodeOverrides = {
+  coordinator: true,
+  'worker-1': true,
+  'worker-2': true,
+  'worker-3': true
+};
+let simulatedLeader = 'worker-1';
+
+function recalculateLeader() {
+  const activeWorkers = ['worker-1', 'worker-2', 'worker-3'].filter(id => nodeOverrides[id]);
+  if (activeWorkers.length === 0) {
+    simulatedLeader = null;
+  } else {
+    if (!simulatedLeader || !activeWorkers.includes(simulatedLeader)) {
+      simulatedLeader = activeWorkers[0];
+    }
+  }
+}
+
+function toggleNode(id) {
+  const cb = document.getElementById('toggle-checkbox-' + id);
+  if (!cb) return;
+  const isChecked = cb.checked;
+  nodeOverrides[id] = isChecked;
+  
+  const label = document.getElementById('toggle-label-' + id);
+  const slider = document.getElementById('slider-' + id);
+  const knob = document.getElementById('knob-' + id);
+  
+  if (label) {
+    label.textContent = isChecked ? 'ON' : 'OFF';
+    label.style.color = isChecked ? '#00ff66' : '#ff4b4b';
+  }
+  if (slider) {
+    slider.style.background = isChecked ? '#00ff66' : '#ff4b4b';
+  }
+  if (knob) {
+    const isWorker = id.startsWith('worker');
+    knob.style.left = isChecked ? (isWorker ? '15px' : '18px') : '2px';
+  }
+  
+  if (typeof playClickSound === 'function') {
+    playClickSound();
+  }
+  
+  recalculateLeader();
+  fetchClusterHealth();
+}
+
 
 // ═══════════════════════════════════════════════════════════
 //  TABS & MOBILE NAVIGATION
@@ -5445,35 +5561,43 @@ async function fetchClusterHealth() {
   const coordStatus = document.getElementById('coordinatorStatus');
   const coordHost = document.getElementById('coordinatorHost');
   
-  // Set all status cards to checking state initially
-  ['worker-1', 'worker-2', 'worker-3'].forEach(id => {
-    const badge = document.getElementById(`status-${id}`);
-    if (badge) {
-      badge.textContent = 'Checking...';
-      badge.style.background = 'var(--trans-white-08)';
-      badge.style.color = 'var(--ink)';
-    }
-  });
+  // Recalculate leader consensus roles
+  recalculateLeader();
 
-  // 1. Fetch Coordinator health from API proxy
+  // 1. Fetch Coordinator health from API proxy or fallback
   let coordOnline = false;
   let coordHostUrl = `${API}/cluster/coordinator/health`;
-  try {
-    const res = await fetch(`${API}/cluster/coordinator/health`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.status === 'ok') {
-        coordOnline = true;
+  let isSimulatedCoord = false;
+
+  if (nodeOverrides.coordinator === false) {
+    coordOnline = false;
+    if (coordHost) coordHost.textContent = `Proxy: ${coordHostUrl} (Offline)`;
+  } else {
+    try {
+      const res = await fetch(`${API}/cluster/coordinator/health`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'ok') {
+          coordOnline = true;
+        }
       }
+    } catch (e) {
+      console.error('Coordinator ping failed, falling back to simulation:', e);
     }
-  } catch (e) {
-    console.error('Coordinator ping failed:', e);
+    
+    if (!coordOnline) {
+      coordOnline = true;
+      isSimulatedCoord = true;
+    }
+    
+    if (coordHost) {
+      coordHost.textContent = `Proxy: ${coordHostUrl}${isSimulatedCoord ? ' (Simulated)' : ''}`;
+    }
   }
 
-  if (coordHost) coordHost.textContent = `Proxy: ${coordHostUrl}`;
   if (coordStatus) {
     if (coordOnline) {
-      coordStatus.textContent = 'Online';
+      coordStatus.textContent = isSimulatedCoord ? 'Online (Simulated)' : 'Online';
       coordStatus.style.background = '#00ff66';
       coordStatus.style.color = '#000';
     } else {
@@ -5493,40 +5617,14 @@ async function fetchClusterHealth() {
     const vecDiv = document.getElementById(`vec-${id}`);
     const logDiv = document.getElementById(`log-${id}`);
 
-    try {
-      const res = await fetch(`${API}/cluster/worker/${id}/health`);
-      if (!res.ok) throw new Error('Offline');
-      const w = await res.json();
-      
-      if (statusSpan) {
-        statusSpan.textContent = 'Online';
-        statusSpan.style.background = '#00ff66';
-        statusSpan.style.color = '#000';
-      }
-      if (card) card.style.borderColor = 'rgba(0, 255, 102, 0.2)';
-      if (roleDiv) {
-        roleDiv.textContent = w.raft_is_leader ? 'Leader 👑' : 'Follower';
-        roleDiv.style.color = w.raft_is_leader ? '#ff7a3d' : '#0099ff';
-      }
-      if (vecDiv) vecDiv.textContent = w.vectors !== undefined ? w.vectors : '0';
-      if (logDiv) logDiv.textContent = w.log_size !== undefined ? w.log_size : '0';
-      
-      // Update CPU Telemetry for active node
-      const cpuVal = Math.floor(Math.random() * 20) + 8;
-      const cpuSpan = document.getElementById(`cpu-${id}`);
-      const cpuBar = document.getElementById(`cpu-bar-${id}`);
-      if (cpuSpan) cpuSpan.textContent = cpuVal + '%';
-      if (cpuBar) {
-        cpuBar.style.width = cpuVal + '%';
-        cpuBar.style.background = cpuVal > 18 ? 'var(--grad-violet)' : 'var(--accent-blue)';
-      }
-    } catch (err) {
+    // If node is manually toggled OFF
+    if (nodeOverrides[id] === false) {
       if (statusSpan) {
         statusSpan.textContent = 'Offline';
         statusSpan.style.background = '#ff4b4b';
         statusSpan.style.color = '#fff';
       }
-      if (card) card.style.borderColor = 'rgba(255, 75, 75, 0.1)';
+      if (card) card.style.borderColor = 'rgba(255, 75, 75, 0.15)';
       if (roleDiv) {
         roleDiv.textContent = '—';
         roleDiv.style.color = '';
@@ -5538,7 +5636,81 @@ async function fetchClusterHealth() {
       const cpuSpan = document.getElementById(`cpu-${id}`);
       const cpuBar = document.getElementById(`cpu-bar-${id}`);
       if (cpuSpan) cpuSpan.textContent = '0%';
-      if (cpuBar) cpuBar.style.width = '0%';
+      if (cpuBar) {
+        cpuBar.style.width = '0%';
+        cpuBar.style.background = 'var(--surface-2)';
+      }
+      continue;
+    }
+
+    // Node is ON -> try to contact real backend
+    let workerOnline = false;
+    let wData = null;
+
+    try {
+      const res = await fetch(`${API}/cluster/worker/${id}/health`);
+      if (res.ok) {
+        wData = await res.json();
+        workerOnline = true;
+      }
+    } catch (err) {
+      // Fetch failed, will fall back to simulation
+    }
+
+    if (workerOnline && wData) {
+      if (statusSpan) {
+        statusSpan.textContent = 'Online';
+        statusSpan.style.background = '#00ff66';
+        statusSpan.style.color = '#000';
+      }
+      if (card) card.style.borderColor = 'rgba(0, 255, 102, 0.2)';
+      if (roleDiv) {
+        roleDiv.textContent = wData.raft_is_leader ? 'Leader 👑' : 'Follower';
+        roleDiv.style.color = wData.raft_is_leader ? '#ff7a3d' : '#0099ff';
+      }
+      if (vecDiv) vecDiv.textContent = wData.vectors !== undefined ? wData.vectors : '0';
+      if (logDiv) logDiv.textContent = wData.log_size !== undefined ? wData.log_size : '0';
+      
+      // Update CPU Telemetry for active node
+      const cpuVal = Math.floor(Math.random() * 20) + 8;
+      const cpuSpan = document.getElementById(`cpu-${id}`);
+      const cpuBar = document.getElementById(`cpu-bar-${id}`);
+      if (cpuSpan) cpuSpan.textContent = cpuVal + '%';
+      if (cpuBar) {
+        cpuBar.style.width = cpuVal + '%';
+        cpuBar.style.background = cpuVal > 18 ? 'var(--grad-violet)' : 'var(--accent-blue)';
+      }
+    } else {
+      // Simulated online mode
+      if (statusSpan) {
+        statusSpan.textContent = 'Online (Simulated)';
+        statusSpan.style.background = '#00ff66';
+        statusSpan.style.color = '#000';
+      }
+      if (card) card.style.borderColor = 'rgba(0, 255, 102, 0.2)';
+      
+      const isLeader = (simulatedLeader === id);
+      if (roleDiv) {
+        roleDiv.textContent = isLeader ? 'Leader 👑' : 'Follower';
+        roleDiv.style.color = isLeader ? '#ff7a3d' : '#0099ff';
+      }
+      
+      // Provide some realistic mock vector counts and log sizes
+      const mockVectors = { 'worker-1': 1084, 'worker-2': 1092, 'worker-3': 1079 };
+      const mockLog = { 'worker-1': 48, 'worker-2': 48, 'worker-3': 48 };
+      
+      if (vecDiv) vecDiv.textContent = mockVectors[id];
+      if (logDiv) logDiv.textContent = mockLog[id];
+
+      // Update CPU Telemetry for active node
+      const cpuVal = Math.floor(Math.random() * 12) + 5;
+      const cpuSpan = document.getElementById(`cpu-${id}`);
+      const cpuBar = document.getElementById(`cpu-bar-${id}`);
+      if (cpuSpan) cpuSpan.textContent = cpuVal + '%';
+      if (cpuBar) {
+        cpuBar.style.width = cpuVal + '%';
+        cpuBar.style.background = 'var(--accent-blue)';
+      }
     }
   }
 }
