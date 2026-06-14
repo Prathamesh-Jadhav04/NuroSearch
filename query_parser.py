@@ -94,6 +94,10 @@ class NuroParser(Parser):
     def condition(self, p):
         return {'field': p.IDENT, 'op': '=', 'value': p.STRING}
         
+    @_('IDENT NEQ STRING')
+    def condition(self, p):
+        return {'field': p.IDENT, 'op': '!=', 'value': p.STRING}
+        
     @_('IDENT EQ NUMBER')
     def condition(self, p):
         return {'field': p.IDENT, 'op': '=', 'value': p.NUMBER}
@@ -102,9 +106,21 @@ class NuroParser(Parser):
     def condition(self, p):
         return {'field': p.IDENT, 'op': '>', 'value': p.NUMBER}
         
+    @_('IDENT GTE NUMBER')
+    def condition(self, p):
+        return {'field': p.IDENT, 'op': '>=', 'value': p.NUMBER}
+        
     @_('IDENT LT NUMBER')
     def condition(self, p):
         return {'field': p.IDENT, 'op': '<', 'value': p.NUMBER}
+        
+    @_('IDENT LTE NUMBER')
+    def condition(self, p):
+        return {'field': p.IDENT, 'op': '<=', 'value': p.NUMBER}
+    
+    @_('IDENT NEQ NUMBER')
+    def condition(self, p):
+        return {'field': p.IDENT, 'op': '!=', 'value': p.NUMBER}
         
     @_('LIMIT NUMBER')
     def limit_clause(self, p):

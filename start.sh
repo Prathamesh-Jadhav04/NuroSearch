@@ -5,16 +5,23 @@ if command -v ollama >/dev/null 2>&1; then
     echo "Starting Ollama server..."
     ollama serve > /tmp/ollama.log 2>&1 &
     
-    echo "Waiting for Ollama to start..."
-    until curl -s http://127.0.0.1:11434/api/tags >/dev/null; do
+    echo "Waiting for Ollama to start (max 30 seconds)..."
+    timeout=30
+    counter=0
+    until curl -s http://127.0.0.1:11434/api/tags >/dev/null || [ $counter -eq $timeout ]; do
         sleep 1
+        counter=$((counter + 1))
     done
     
-    echo "Pulling nomic-embed-text..."
-    ollama pull nomic-embed-text
-    
-    echo "Pulling qwen2.5:0.5b..."
-    ollama pull qwen2.5:0.5b
+    if [ $counter -eq $timeout ]; then
+        echo "Ollama server failed to start within $timeout seconds. Skipping model pulling."
+    else
+        echo "Pulling nomic-embed-text..."
+        ollama pull nomic-embed-text
+        
+        echo "Pulling qwen2.5:0.5b..."
+        ollama pull qwen2.5:0.5b
+    fi
 else
     echo "Ollama not installed, skipping startup"
 fi

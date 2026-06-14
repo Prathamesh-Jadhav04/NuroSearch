@@ -6,10 +6,11 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     curl \
+    zstd \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Ollama
-RUN curl -fsSL https://ollama.com/install.sh | sh
+# Install Ollama (manually download and extract binary to avoid systemd/installer script errors)
+RUN curl -fsSL https://ollama.com/download/ollama-linux-amd64.tar.zst | tar -x --zstd -C /usr
 
 # Install Python dependencies (cached layer)
 COPY requirements.txt .
@@ -19,11 +20,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Convert CRLF to LF for start.sh and make it executable
-RUN sed -i -e 's/\r$//' /app/start.sh && chmod +x /app/start.sh
+RUN tr -d '\r' < start.sh > start_lf.sh && mv start_lf.sh start.sh && chmod +x start.sh
 
-# Non-root user for security
-RUN useradd -m -u 1000 nurosearch && chown -R nurosearch:nurosearch /app
-USER nurosearch
+# Create non-root user for security (handling pre-existing UID 1000)
+RUN (id -u 1000 >/dev/null 2>&1 || useradd -m -u 1000 nurosearch) && chown -R 1000:1000 /app
+USER 1000
 
 EXPOSE 7860
 

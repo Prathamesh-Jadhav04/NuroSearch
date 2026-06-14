@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="NuroSearch — A high-performance vector database engine with HNSW, KD-Tree, IVF-PQ, GPU-accelerated search, hybrid BM25 retrieval, RAG pipelines, and a real-time dashboard. Built with Python, Flask, PyTorch, and SQLite.">
 <title>NuroSearch — Vector Database Dashboard</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2349,6 +2350,7 @@ body.cursor-active [onclick] {
   body.cursor-active [onclick] {
     cursor: auto !important;
   }
+}
 /* ── Dropzone File Uploader ── */
 .dropzone {
   border: 1.5px dashed var(--hairline);
@@ -4023,11 +4025,11 @@ async function trainIVFPQ() {
   try {
     const r = await fetch(API + '/ivfpq/train', { method: 'POST' });
     const d = await r.json();
-    alert(d.message || 'IVF-PQ training complete!');
+    showToast(d.message || 'IVF-PQ training complete!', 'success');
     loadIVFPQStats();
   } catch(e) {
     console.error('Failed to train IVF-PQ:', e);
-    alert('Training failed.');
+    showToast('Training failed.', 'error');
   } finally {
     btn.disabled = false;
     btn.textContent = 'Train IVF-PQ Index';
@@ -4238,7 +4240,7 @@ async function runSearch() {
     if (r.status === 400) {
       const err = await r.json();
       if (err.error && err.error.includes("not trained")) {
-        alert("IVF-PQ Index is untrained. Train it using the panel in the right sidebar.");
+        showToast('IVF-PQ Index is untrained. Train it using the panel in the right sidebar.', 'warning');
         return;
       }
     }
@@ -4250,7 +4252,7 @@ async function runSearch() {
     runBenchmark();
   } catch(e) { 
     console.error('Search failed:', e); 
-    alert('Search failed: ' + (e.message || 'Server error')); 
+    showToast('Search failed: ' + (e.message || 'Server error'), 'error'); 
   }
 }
 
@@ -5346,7 +5348,7 @@ async function runSqlQuery() {
   const text = document.getElementById('sqlQueryTextParam').value.trim();
   
   if (!query) {
-    alert("Please enter a SQL query first.");
+    showToast('Please enter a SQL query first.', 'warning');
     return;
   }
   
@@ -5995,18 +5997,7 @@ async function deletePortalMessage(id) {
   }
 }
 
-function escapeHTML(str) {
-  if (!str) return '';
-  return str.replace(/[&<>'"]/g, 
-    tag => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;'
-    }[tag] || tag)
-  );
-}
+const escapeHTML = escapeHtml;
 
 function playSuccessChord() {
   if (isMuted) return;
