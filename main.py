@@ -17,11 +17,7 @@ import atexit
 from collections import Counter
 from pypdf import PdfReader
 from ivfpq import IVFPQIndex
-from gpu_search import GPUSearchIndex
-from knowledge_graph import KnowledgeGraph
 from query_parser import NuroLexer, NuroParser, compile_to_api_call
-
-kg = KnowledgeGraph()
 
 # Re-ranking
 try:
@@ -600,6 +596,7 @@ class VectorDB:
         self.kdt = KDTree(d)
         self.hnsw = HNSW(16, 200)
         self.ivfpq = IVFPQIndex(dim=d, M=4, C=8, n_probe=2, metric="cosine")
+        from gpu_search import GPUSearchIndex
         self.gpu_index = GPUSearchIndex(dim=d)
         self.mu = threading.Lock()
         self.nextId = 1
@@ -1026,13 +1023,43 @@ db_path = os.environ.get('SQLITE_DB_PATH', 'vectors.db')
 db_dir = os.path.dirname(db_path)
 if db_dir:
     os.makedirs(db_dir, exist_ok=True)
-sqlite_db = SQLiteDB(db_path)
-sqlite_lock = threading.Lock()  # Shared lock for SQLite to prevent concurrent write corruption
-db = VectorDB(DIMS, sqlite_db)
-doc_db = DocumentDB(sqlite_db)
-ollama = OllamaClient()
 
-load_demo(db)
+# Define thread-safe lock for lazy loading
+_init_lock = threading.Lock()
+_initialized = False
+
+db = None
+doc_db = None
+ollama = None
+sqlite_db = None
+sqlite_lock = None
+kg = None
+
+def init_app_context():
+    global db, doc_db, ollama, sqlite_db, sqlite_lock, kg, _initialized
+    with _init_lock:
+        if _initialized:
+            return
+        print("[System] Lazily initializing application context (database and LLM clients)...")
+        sqlite_db = SQLiteDB(db_path)
+        sqlite_lock = threading.Lock()
+        
+        # Initialize VectorDB (which will lazily import GPUSearchIndex)
+        db = VectorDB(DIMS, sqlite_db)
+        doc_db = DocumentDB(sqlite_db)
+        ollama = OllamaClient()
+        
+        # Initialize KnowledgeGraph lazily
+        from knowledge_graph import KnowledgeGraph
+        kg = KnowledgeGraph()
+        
+        load_demo(db)
+        _initialized = True
+        print("[System] Application context initialized successfully.")
+
+@app.before_request
+def ensure_initialized():
+    init_app_context()
 
 # =====================================================================
 #  FLASK ROUTES
