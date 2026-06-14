@@ -2686,13 +2686,6 @@ body, aside.sidebar, header.top-header, main.content-area, .nav-item, input, but
 .theme-toggle-btn:active {
   transform: translate3d(0, 0, 0) scale3d(0.95, 0.95, 1);
 }
-/* Kafka Step Interactive Hover Effect */
-.kafka-step-interactive:hover .kafka-step-icon {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(0, 119, 255, 0.3);
-  border-color: var(--accent-blue) !important;
-  background-color: rgba(0, 119, 255, 0.05) !important;
-}
 
 /* Custom Cursor */
 .custom-cursor-dot, .custom-cursor-outline {
@@ -2702,35 +2695,33 @@ body, aside.sidebar, header.top-header, main.content-area, .nav-item, input, but
   left: 0;
   border-radius: 50%;
   z-index: 999999;
-  transform: translate3d(0, 0, 0) translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   opacity: 0;
-  will-change: transform, opacity;
-  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.05s ease-out;
+  will-change: transform;
+  mix-blend-mode: difference;
 }
 .custom-cursor-dot {
   width: 6px;
   height: 6px;
-  background-color: var(--ink);
-  box-shadow: 0 0 8px var(--ink);
+  background-color: #ffffff;
+  transition: transform 0.2s ease;
 }
 .custom-cursor-outline {
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid var(--ink);
-  box-shadow: 0 0 12px rgba(120, 120, 120, 0.1);
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Hover states (properties transition smoothly while transforms are driven by JS) */
+/* Hover styles for interactive items */
 .custom-cursor-hover .custom-cursor-outline {
+  transform: translate(-50%, -50%) scale(1.6);
   background-color: #ffffff;
   border-color: #ffffff;
-  mix-blend-mode: difference;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.45);
 }
 .custom-cursor-hover .custom-cursor-dot {
-  background-color: #ffffff;
-  mix-blend-mode: difference;
-  box-shadow: none;
+  transform: translate(-50%, -50%) scale(0);
 }
 
 /* Hide native cursor only when custom cursor is active */
@@ -2741,12 +2732,6 @@ body.cursor-active select,
 body.cursor-active input, 
 body.cursor-active textarea, 
 body.cursor-active .nav-item,
-body.cursor-active .chip,
-body.cursor-active .suggestion-chip,
-body.cursor-active .connect-card,
-body.cursor-active .hl-card,
-body.cursor-active .theme-toggle-btn,
-body.cursor-active .portal-form-wrap,
 body.cursor-active [onclick] {
   cursor: none !important;
 }
@@ -2763,12 +2748,6 @@ body.cursor-active [onclick] {
   body.cursor-active input, 
   body.cursor-active textarea, 
   body.cursor-active .nav-item,
-  body.cursor-active .chip,
-  body.cursor-active .suggestion-chip,
-  body.cursor-active .connect-card,
-  body.cursor-active .hl-card,
-  body.cursor-active .theme-toggle-btn,
-  body.cursor-active .portal-form-wrap,
   body.cursor-active [onclick] {
     cursor: auto !important;
   }
@@ -2862,6 +2841,367 @@ body.cursor-active [onclick] {
 }
 .toast-info .toast-icon {
   color: var(--accent-blue);
+}
+
+/* ==========================================
+   NuroSearch Enterprise Dashboard Additions
+   ========================================== */
+.nuro-flex-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+/* Hybrid Slider & Filtering Styles */
+.tuning-slider-container {
+  margin-top: 15px;
+  background: var(--trans-white-05);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  border: 1px solid var(--hairline);
+}
+.tuning-slider-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.tuning-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  background: var(--surface-2);
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+}
+.tuning-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--grad-violet);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--grad-violet);
+  border: 2px solid var(--primary);
+}
+
+.filter-builder {
+  margin-top: 15px;
+  background: var(--trans-white-05);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  border: 1px solid var(--hairline);
+}
+.filter-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  min-height: 28px;
+  align-items: center;
+}
+.filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+}
+.filter-tag span.close-tag {
+  color: #ef4444;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 2px;
+}
+.filter-add-btn {
+  background: none;
+  border: 1px dashed var(--ink-muted);
+  color: var(--ink-muted);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.filter-add-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+/* PCA/t-SNE/UMAP Selectors and K-Means Centroids */
+.kmeans-inspector {
+  background: var(--trans-white-05);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 15px;
+}
+.kmeans-centroid-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.vector-table-container {
+  margin-top: 15px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+}
+.vector-explorer-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.vector-explorer-table th, .vector-explorer-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--hairline-soft);
+  text-align: left;
+}
+.vector-explorer-table th {
+  background: var(--surface-2);
+  color: var(--ink-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 9px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.fly-to-btn {
+  background: var(--trans-white-08);
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.fly-to-btn:hover {
+  background: var(--accent-blue);
+  color: #fff;
+  border-color: var(--accent-blue);
+}
+
+/* Chunking Visualizer Styles */
+.chunking-preview-box {
+  background: var(--code-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.6;
+  max-height: 160px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.chunk-hl-0 { background-color: rgba(106, 76, 245, 0.25); border-bottom: 2px solid #6a4cf5; }
+.chunk-hl-1 { background-color: rgba(212, 77, 240, 0.25); border-bottom: 2px solid #d44df0; }
+.chunk-hl-2 { background-color: rgba(0, 153, 255, 0.25); border-bottom: 2px solid #0099ff; }
+.chunk-hl-3 { background-color: rgba(16, 185, 129, 0.25); border-bottom: 2px solid #10b981; }
+
+/* RAG Settings & Citation Inspector */
+.rag-param-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--trans-white-05);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 12px;
+}
+.rag-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rag-slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--ink-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.rag-input-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  background: var(--surface-2);
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+}
+.rag-input-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  cursor: pointer;
+  border: 1px solid var(--primary);
+}
+
+/* Citation sidebar */
+.citation-reference-panel {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 12px;
+}
+.citation-bubble-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: var(--grad-violet);
+  color: #fff;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 50%;
+  margin: 0 4px;
+  cursor: pointer;
+  vertical-align: super;
+}
+
+/* SQL query history sidebar */
+.sql-sidebar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--trans-white-05);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 15px;
+}
+.sql-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.sql-history-item:hover {
+  border-color: var(--accent-blue);
+}
+.sql-favorite-star {
+  color: #ffa726;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Visual Execution Plan */
+.plan-diagram-box {
+  background: var(--code-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.plan-node {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 11px;
+  font-family: monospace;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+.plan-arrow {
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+
+/* Raft Consensus SVG styles */
+.raft-flow-box {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 15px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* DB benchmark suite */
+.db-bench-box {
+  background: var(--trans-white-05);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 15px;
+}
+.db-bench-progress-row {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.db-bench-bar-track {
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--hairline-soft);
+}
+.db-bench-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-blue);
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* SDK Playground Tabs */
+.sdk-tabs-header {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 10px;
+}
+.sdk-tab-btn {
+  background: none;
+  border: none;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.sdk-tab-btn.active {
+  color: var(--accent-blue);
+  border-bottom-color: var(--accent-blue);
 }
 </style>
 </head>
@@ -3025,6 +3365,40 @@ body.cursor-active [onclick] {
                 <div class="pill" onclick="setMetric(this, 'euclidean')">Euclidean</div>
                 <div class="pill" onclick="setMetric(this, 'manhattan')">Manhattan</div>
               </div>
+
+              <!-- Hybrid Tuning Slider (Only visible when hybrid algorithm is selected) -->
+              <div class="tuning-slider-container" id="hybridTuningContainer" style="display: none;">
+                <div class="tuning-slider-header">
+                  <span>Hybrid Balance</span>
+                  <span id="hybridTuningValue" class="font-mono">50% Semantic</span>
+                </div>
+                <input type="range" class="tuning-slider" id="hybridWeightSlider" min="0" max="100" value="50" oninput="updateHybridWeight(this.value)" />
+                <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--ink-muted); margin-top:4px;">
+                  <span>Keyword (BM25)</span>
+                  <span>Vector (Semantic)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metadata Filter GUI -->
+            <div class="status-card">
+              <h4 style="font-family:'Outfit'; font-size:14px; font-weight:600; margin-bottom:4px;">Metadata Filtering</h4>
+              <p style="font-size:11px; color:var(--ink-muted); line-height:1.4; margin-bottom:10px;">Apply hard metadata filters to restrict vector candidates during query phase.</p>
+              <div class="filter-builder">
+                <div style="display:flex; gap:8px;">
+                  <select id="filterKey" style="flex:1; height:28px; font-size:11px; padding:0 4px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface-2); color:var(--ink);">
+                    <option value="category">category</option>
+                    <option value="id">id</option>
+                  </select>
+                  <select id="filterOp" style="width:50px; height:28px; font-size:11px; padding:0 2px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface-2); color:var(--ink);">
+                    <option value="=">=</option>
+                    <option value="!=">!=</option>
+                  </select>
+                  <input type="text" id="filterVal" placeholder="value" style="width:80px; height:28px; font-size:11px; padding:0 6px; background:var(--input-bg); border:1px solid var(--input-border); border-radius:4px; color:var(--ink);" />
+                </div>
+                <button class="btn-secondary" onclick="addMetadataFilter()" style="width:100%; height:26px; font-size:10px; margin-top:8px; padding:0;">Add Filter Constraint</button>
+                <div class="filter-tags-container" id="filterTags"></div>
+              </div>
             </div>
             
             <!-- Query History Card -->
@@ -3107,25 +3481,48 @@ body.cursor-active [onclick] {
           </div>
         </div>
         
+        <!-- Projection Method Selector -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+          <span style="font-size:10px; color:var(--ink-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Projection Algorithm:</span>
+          <div class="pills" id="projectionPills">
+            <div class="pill on" onclick="setProjectionMethod(this, 'pca3d')">PCA 3D</div>
+            <div class="pill" onclick="setProjectionMethod(this, 'tsne')">t-SNE (Simulated)</div>
+            <div class="pill" onclick="setProjectionMethod(this, 'umap')">UMAP (Simulated)</div>
+          </div>
+        </div>
+
         <div class="visualizer-scroll-wrapper" style="width: 100%; margin-bottom: 20px; border-radius: var(--radius-xl); border: 1px solid var(--hairline); background: var(--surface-1); overflow: hidden; display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto;">
           <div id="scatter3d" style="width: 100%; margin-bottom: 0; border: none; border-radius: 0;"></div>
         </div>
         
         <div class="search-grid">
-          <!-- HNSW Layers Structure -->
+          <!-- HNSW Layers Structure & K-Means Clustering -->
           <div>
             <div class="section-title">HNSW Graph Layers</div>
             <p class="section-sub">Node distribution and link edges per layer in the Hierarchical Navigable Small World index.</p>
-            <div class="status-card" id="layers">Loading layers info...</div>
+            <div class="status-card" id="layers" style="margin-bottom: 15px;">Loading layers info...</div>
+
+            <!-- K-Means Cluster Centroids Inspector -->
+            <div class="kmeans-inspector">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h4 style="font-family:'Outfit'; font-size:13px; font-weight:600;">K-Means Cluster Centroids</h4>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:10px; color:var(--ink-muted);">K =</span>
+                  <input type="number" id="kmeansK" value="3" min="2" max="6" style="width:36px; height:20px; font-size:11px; text-align:center; border:1px solid var(--hairline); background:var(--surface-2); color:var(--ink); border-radius:4px;" onchange="runLocalKMeans()" />
+                </div>
+              </div>
+              <p style="font-size:11px; color:var(--ink-muted); line-height:1.4; margin-bottom:8px;">Dynamically cluster stored vectors in JavaScript using Euclidean centroid convergence.</p>
+              <div id="kmeansCentroidsList" style="display:flex; flex-direction:column; gap:4px;"></div>
+            </div>
           </div>
           
-          <!-- Vector Insertion Form -->
+          <!-- Vector Insertion Form & Explorer -->
           <div>
             <div class="section-title">Insert Vector</div>
             <p class="section-sub">Manually insert a 16-dimensional vector labeled by semantic category.</p>
             <div class="status-card">
               <input type="text" id="addMeta" placeholder="Vector description... (e.g. heap sort)" />
-              <select id="addCat" style="margin-bottom: 12px;">
+              <select id="addCat" style="margin-bottom: 12px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface-2); color:var(--ink); font-size:12px; height:28px;">
                 <option value="cs">CS / Algorithms</option>
                 <option value="math">Mathematics</option>
                 <option value="food">Food</option>
@@ -3135,8 +3532,28 @@ body.cursor-active [onclick] {
             </div>
             
             <div class="section-label" style="margin-top: 15px;">Session Insertion History</div>
-            <div class="status-card" id="vectorHistory" style="max-height:160px; overflow-y:auto; padding:10px;">
+            <div class="status-card" id="vectorHistory" style="max-height:160px; overflow-y:auto; padding:10px; margin-bottom: 15px;">
               <div style="color:var(--ink-muted); font-size:12px; text-align:center; padding:8px;">No vectors added yet.</div>
+            </div>
+
+            <!-- Interactive Vector Explorer Table -->
+            <div class="section-label" style="margin-top: 15px;">Stored Vector Explorer</div>
+            <div class="vector-table-container">
+              <table class="vector-explorer-table">
+                <thead>
+                  <tr>
+                    <th>Meta / Desc</th>
+                    <th>Cat</th>
+                    <th>Coords (PC1,PC2)</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="vectorExplorerBody">
+                  <tr>
+                    <td colspan="4" style="color:var(--ink-muted); font-size:11px; text-align:center; padding:12px;">No vectors in memory.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -3183,14 +3600,52 @@ body.cursor-active [onclick] {
             </button>
             
             <div id="insertStatus" style="font-size:11px; color:var(--accent-blue); margin-top:10px; text-align:center;"></div>
+
+            <!-- Live Chunking Visualizer -->
+            <div style="border-top:1px solid var(--hairline-soft); margin-top:16px; padding-top:16px;">
+              <h4 style="font-family:'Outfit'; font-size:14px; font-weight:600; margin-bottom:4px;">Live Chunking Preview</h4>
+              <p style="font-size:11px; color:var(--ink-muted); line-height:1.4; margin-bottom:12px;">Visualize document chunk boundaries based on size and overlap constraints.</p>
+              
+              <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                <div class="rag-slider-group">
+                  <div class="rag-slider-label">
+                    <span>Chunk Size (words)</span>
+                    <span id="chunkSizeVal" class="font-mono">15 words</span>
+                  </div>
+                  <input type="range" class="rag-input-slider" id="chunkSizeSlider" min="5" max="50" value="15" oninput="updateChunkingPreview()" />
+                </div>
+                <div class="rag-slider-group">
+                  <div class="rag-slider-label">
+                    <span>Overlap (words)</span>
+                    <span id="chunkOverlapVal" class="font-mono">3 words</span>
+                  </div>
+                  <input type="range" class="rag-input-slider" id="chunkOverlapSlider" min="0" max="15" value="3" oninput="updateChunkingPreview()" />
+                </div>
+              </div>
+              
+              <div class="chunking-preview-box" id="chunkPreview">
+                Type or paste text above to see visual chunk ranges.
+              </div>
+            </div>
           </div>
           
-          <!-- Stored Documents List -->
+          <!-- Stored Documents List & Chunk Browser -->
           <div>
             <div class="section-title" style="margin-top:0;">Stored Documents</div>
-            <div id="docList" style="max-height: 480px; overflow-y: auto; padding-right: 6px;">
+            <div id="docList" style="max-height: 240px; overflow-y: auto; padding-right: 6px; margin-bottom: 20px;">
               <div style="color:var(--ink-muted); font-size:13px; text-align:center; padding:16px; background:var(--surface-1); border-radius:var(--radius-xl); border:1px solid var(--hairline);">
                 No documents found.
+              </div>
+            </div>
+
+            <!-- Chunk Browser Grid -->
+            <div>
+              <div class="section-title">Corpus Chunks Explorer</div>
+              <p class="section-sub">Browse embedded passages, their SQLite indices, word counts, and raw vector properties.</p>
+              <div id="chunkListContainer" style="max-height: 240px; overflow-y: auto; padding-right: 6px;">
+                <div style="color:var(--ink-muted); font-size:12px; text-align:center; padding:16px; background:var(--surface-1); border-radius:var(--radius-md); border:1px solid var(--hairline);">
+                  Select a document above to browse its chunks.
+                </div>
               </div>
             </div>
           </div>
@@ -3276,10 +3731,45 @@ body.cursor-active [onclick] {
             </select>
             
             <div class="section-label">Neural Reranker Model</div>
-            <select id="rerankModel">
+            <select id="rerankModel" style="margin-bottom:12px;">
               <option value="bge-reranker-base">BAAI/bge-reranker-base</option>
               <option value="jina-reranker-v1-turbo">jina-reranker-v1-turbo</option>
             </select>
+
+            <!-- Prompt Templates -->
+            <div class="section-label">System Prompt Persona</div>
+            <select id="systemPromptTemplate" onchange="updateSystemPersona(this.value)" style="margin-bottom: 12px;">
+              <option value="standard">Standard RAG Assistant</option>
+              <option value="programmer">Guru Software Engineer</option>
+              <option value="summarizer">Concise Academic Editor</option>
+              <option value="sql_expert">Database / SQL Expert</option>
+            </select>
+
+            <!-- RAG Parameters Panel -->
+            <div class="rag-param-panel" style="margin-bottom: 12px;">
+              <div class="rag-slider-group">
+                <div class="rag-slider-label">
+                  <span>LLM Temperature</span>
+                  <span id="ragTempLabel" class="font-mono">0.3</span>
+                </div>
+                <input type="range" class="rag-input-slider" id="ragTempSlider" min="0.0" max="1.0" step="0.1" value="0.3" oninput="document.getElementById('ragTempLabel').textContent=this.value" />
+              </div>
+              <div class="rag-slider-group">
+                <div class="rag-slider-label">
+                  <span>Top-P Sampling</span>
+                  <span id="ragTopPLabel" class="font-mono">0.85</span>
+                </div>
+                <input type="range" class="rag-input-slider" id="ragTopPSlider" min="0.5" max="1.0" step="0.05" value="0.85" oninput="document.getElementById('ragTopPLabel').textContent=this.value" />
+              </div>
+            </div>
+
+            <!-- Citation Source Reference Panel -->
+            <div class="citation-reference-panel" id="citationRefPanel" style="display:none;">
+              <h4 style="font-family:'Outfit'; font-size:12px; font-weight:600; margin-bottom:6px; color:var(--accent-blue);">Citation Source Inspector</h4>
+              <div id="citationRefContent" style="font-size:11px; line-height:1.4; color:var(--ink-muted);">
+                Click any citation link in the AI answer to inspect its original document source context.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -3305,14 +3795,15 @@ body.cursor-active [onclick] {
         <div id="aiWorkingSplit" style="display:none; margin-top:16px;">
           <div id="aiSplitRow" style="display:flex; gap:20px; height:580px;">
             <!-- Left Steps Column -->
-            <div id="aiLeftPanel" style="flex:0 0 340px; min-width:0; display:flex; flex-direction:column;">
+            <div id="aiLeftPanel" style="flex:0 0 340px; min-width:0; display:flex; flex-direction:column; gap:12px;">
               <div class="status-card" style="padding:0; margin-bottom:0; flex:1; display:flex; flex-direction:column; overflow:hidden;">
-                <div style="padding:14px; font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--hairline-soft);">
-                  Execution Steps
+                <div style="padding:14px; font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--hairline-soft); display:flex; justify-content:space-between; align-items:center;">
+                  <span>Execution Steps</span>
+                  <button class="connect-action-btn" id="exportTraceBtn" onclick="exportPipelineTrace()" style="font-size:9px; padding:2px 6px; display:none; opacity:1;"><i class="ti ti-download" style="margin-right:2px;"></i> Trace</button>
                 </div>
                 
                 <div id="pipelineScroll" style="flex:1; overflow-y:auto; padding:14px;">
-                  <div class="pipeline-step" id="step1">
+                  <div class="pipeline-step magnet" id="step1" onclick="inspectPipelineStep(1)" style="cursor:pointer;">
                     <div class="step-icon">1</div>
                     <div class="step-content">
                       <div class="step-title">Query Expansion & Input</div>
@@ -3321,7 +3812,7 @@ body.cursor-active [onclick] {
                   </div>
                   <div class="pipeline-connector" id="conn1"></div>
                   
-                  <div class="pipeline-step" id="step2">
+                  <div class="pipeline-step magnet" id="step2" onclick="inspectPipelineStep(2)" style="cursor:pointer;">
                     <div class="step-icon">2</div>
                     <div class="step-content">
                       <div class="step-title">Embedding Generation</div>
@@ -3330,7 +3821,7 @@ body.cursor-active [onclick] {
                   </div>
                   <div class="pipeline-connector" id="conn2"></div>
                   
-                  <div class="pipeline-step" id="step3">
+                  <div class="pipeline-step magnet" id="step3" onclick="inspectPipelineStep(3)" style="cursor:pointer;">
                     <div class="step-icon">3</div>
                     <div class="step-content">
                       <div class="step-title">HNSW Graph Traversals</div>
@@ -3339,7 +3830,7 @@ body.cursor-active [onclick] {
                   </div>
                   <div class="pipeline-connector" id="conn3"></div>
                   
-                  <div class="pipeline-step" id="step4">
+                  <div class="pipeline-step magnet" id="step4" onclick="inspectPipelineStep(4)" style="cursor:pointer;">
                     <div class="step-icon">4</div>
                     <div class="step-content">
                       <div class="step-title">Context Recall & Rerank</div>
@@ -3348,7 +3839,7 @@ body.cursor-active [onclick] {
                   </div>
                   <div class="pipeline-connector" id="conn4"></div>
                   
-                  <div class="pipeline-step" id="step5">
+                  <div class="pipeline-step magnet" id="step5" onclick="inspectPipelineStep(5)" style="cursor:pointer;">
                     <div class="step-icon">5</div>
                     <div class="step-content">
                       <div class="step-title">LLM Synthesis</div>
@@ -3377,6 +3868,12 @@ body.cursor-active [onclick] {
                       <div id="metricMatches" style="font-size:14px; font-weight:700; color:var(--ink); font-family:monospace;">—</div>
                     </div>
                   </div>
+
+                  <!-- Latency Breakdown bars -->
+                  <div style="margin-top:10px; border-top:1px solid var(--hairline-soft); padding-top:10px;">
+                    <div style="font-size:9px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Latency Breakdown</div>
+                    <div style="display:flex; flex-direction:column; gap:4px;" id="latencyBreakdownBars"></div>
+                  </div>
                 </div>
                 
                 <!-- Stream Answer Area -->
@@ -3388,6 +3885,14 @@ body.cursor-active [onclick] {
                     </div>
                     <div id="pipelineOutput" style="font-size:12px; line-height:1.6; color:var(--ink); white-space:pre-wrap;"></div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Detailed Step Inspector Drawer -->
+              <div class="status-card" id="workingStepInspectorCard" style="display:none; padding:12px; margin-bottom:0; flex-shrink:0; border:1px solid var(--hairline);">
+                <h4 id="inspectorStepTitle" style="font-family:'Outfit'; font-size:12px; font-weight:600; color:var(--accent-blue); margin-bottom:6px; text-transform:uppercase;">Step Details</h4>
+                <div id="inspectorStepContent" style="font-size:11px; line-height:1.4; color:var(--ink-muted); max-height:140px; overflow-y:auto;">
+                  Click any step above to inspect real-time computational parameters.
                 </div>
               </div>
             </div>
@@ -3478,6 +3983,13 @@ body.cursor-active [onclick] {
                 Execute a query to see results.
               </div>
             </div>
+
+            <!-- Visual Query Execution Plan Diagram -->
+            <div class="status-card" id="sqlPlanCard" style="display:none; margin-top:15px; text-align:left;">
+              <div class="section-label">SQL Execution Plan Explainer</div>
+              <p class="section-sub">Visualization of the compiler pipeline stages executing this SQL query.</p>
+              <div class="plan-diagram-box" id="sqlPlanDiagram"></div>
+            </div>
           </div>
           
           <!-- Right Compilation Column -->
@@ -3525,6 +4037,18 @@ body.cursor-active [onclick] {
             <div class="status-card" style="margin-top:15px;">
               <div class="section-label">Compiled API Call</div>
               <pre id="sqlCompiledOutput" style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; font-family:monospace; font-size:10px; overflow-x:auto; margin:0; border:1px solid var(--hairline); color:var(--accent-green); max-height:200px; text-align:left;">{}</pre>
+            </div>
+
+            <!-- SQL Favorites / Query History -->
+            <div class="status-card" style="margin-top:15px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span class="section-label" style="margin-bottom:0;">SQL Favourites &amp; History</span>
+                <button onclick="clearSqlHistory()" style="background:none; border:none; color:var(--ink-muted); cursor:pointer; font-size:10px;">Clear</button>
+              </div>
+              <p class="section-sub" style="margin-bottom:8px;">Star frequent queries for instant local execution.</p>
+              <div id="sqlHistoryList" style="display:flex; flex-direction:column; gap:6px;">
+                <div style="color:var(--ink-muted); font-size:11px; text-align:center; padding:10px;">No historical queries.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -3634,25 +4158,52 @@ body.cursor-active [onclick] {
           </div>
         </div>
 
-        <!-- Live Code Python Terminal -->
-        <div class="section-label">Engine API Integration (Python)</div>
-        <div class="status-card" style="padding:0; overflow:hidden; border:1px solid var(--hairline); margin-bottom:1.75rem; text-align:left;">
-          <div style="background:var(--surface-2); padding:10px 14px; border-bottom:1px solid var(--hairline-soft); display:flex; align-items:center; gap:6px;">
-            <span style="width:10px; height:10px; border-radius:50%; background:#ff5f56; display:inline-block;"></span>
-            <span style="width:10px; height:10px; border-radius:50%; background:#ffbd2e; display:inline-block;"></span>
-            <span style="width:10px; height:10px; border-radius:50%; background:#27c93f; display:inline-block;"></span>
-            <span style="font-family:monospace; font-size:10px; color:var(--ink-muted); margin-left:8px;">nurosearch_example.py</span>
+        <!-- Multi-language SDK Playground Tabs -->
+        <div class="section-label">Engine API Integration (Multi-language SDK)</div>
+        <div class="status-card" style="padding:15px; border:1px solid var(--hairline); margin-bottom:1.75rem; text-align:left; background:var(--surface-1);">
+          <div class="sdk-tabs-header">
+            <button class="sdk-tab-btn active" onclick="switchSDKTab(this, 'python')">Python</button>
+            <button class="sdk-tab-btn" onclick="switchSDKTab(this, 'nodejs')">Node.js</button>
+            <button class="sdk-tab-btn" onclick="switchSDKTab(this, 'curl')">cURL</button>
           </div>
-          <pre style="margin:0; padding:16px; font-family:'JetBrains Mono', monospace; font-size:11px; line-height:1.6; background:#0d0d0d; color:#eaeaea; overflow-x:auto;">
+          
+          <div id="sdk-code-python" class="sdk-code-block">
+            <pre style="margin:0; padding:10px; font-family:'JetBrains Mono', monospace; font-size:11px; line-height:1.6; background:#0d0d0d; color:#eaeaea; overflow-x:auto; border-radius:6px;">
 <span style="color:#ff79c6;">from</span> nurosearch <span style="color:#ff79c6;">import</span> HNSWIndex, Embedder
 
-# Initialize index with L2/Cosine space
-index = HNSWIndex(dimension=<span style="color:#bd93f9;">16</span>, metric=<span style="color:#f1fa8c;">"cosine"</span>, M=<span style="color:#bd93f9;">16</span>, efConstruction=<span style="color:#bd93f9;">64</span>)
+# Initialize 16D HNSW index using Cosine space
+index = HNSWIndex(dimension=<span style="color:#bd93f9;">16</span>, metric=<span style="color:#f1fa8c;">"cosine"</span>, M=<span style="color:#bd93f9;">16</span>)
 embedder = Embedder(model=<span style="color:#f1fa8c;">"nomic-embed-text"</span>)
 
-# Insert and search vectors in sub-milliseconds
-index.add(embedder.embed("Binary search trees represent sorted data"))
-results = index.search(embedder.embed("sorted structures"), k=<span style="color:#bd93f9;">3</span>)</pre>
+# Embed and insert vector in sub-milliseconds
+index.add(embedder.embed(<span style="color:#f1fa8c;">"Dynamic programming optimizes recursion"</span>))
+results = index.search(embedder.embed(<span style="color:#f1fa8c;">"recursion"</span>), k=<span style="color:#bd93f9;">3</span>)</pre>
+          </div>
+          
+          <div id="sdk-code-nodejs" class="sdk-code-block" style="display:none;">
+            <pre style="margin:0; padding:10px; font-family:'JetBrains Mono', monospace; font-size:11px; line-height:1.6; background:#0d0d0d; color:#eaeaea; overflow-x:auto; border-radius:6px;">
+<span style="color:#ff79c6;">const</span> { NuroClient } = <span style="color:#ff79c6;">require</span>(<span style="color:#f1fa8c;">'nurosearch-node'</span>);
+
+// Initialize low-latency client
+const client = new NuroClient({ endpoint: 'http://localhost:8000' });
+
+async function run() {
+  await client.insert({ metadata: 'Binary Search Tree', category: 'cs' });
+  const hits = await client.search({ query: 'CS algorithms', k: 5 });
+  console.log(hits);
+}</pre>
+          </div>
+          
+          <div id="sdk-code-curl" class="sdk-code-block" style="display:none;">
+            <pre style="margin:0; padding:10px; font-family:'JetBrains Mono', monospace; font-size:11px; line-height:1.6; background:#0d0d0d; color:#eaeaea; overflow-x:auto; border-radius:6px;">
+curl -X POST http://localhost:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{
+    "v": [0.1, 0.5, -0.2, 0.8, 0.3, 0.1, -0.05, 0.4, 0.2, 0.1, -0.1, 0.15, 0.0, 0.05, -0.1, 0.2],
+    "k": 5,
+    "metric": "cosine"
+  }'</pre>
+          </div>
         </div>
 
         <!-- Highlights -->
@@ -3721,6 +4272,55 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
               </div>
             </div>
             <div class="hl-bar-wrap"><div class="hl-bar" style="background:#ef4444" data-w="100"></div></div>
+          </div>
+        </div>
+
+        <!-- Database Benchmark Runner -->
+        <div class="db-bench-box" style="margin-bottom: 24px; text-align: left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="font-family:'Outfit'; font-size:14px; font-weight:700; color:var(--grad-magenta);">Local Database Benchmark Suite</h4>
+            <button class="btn-primary" onclick="runJsBenchmark()" style="padding:4px 12px; font-size:11px;">Run Live JS Test</button>
+          </div>
+          <p style="font-size:11px; color:var(--ink-muted); line-height:1.4;">Benchmark HNSW Graph multi-layer routing vs. KD-Tree partition searching vs. Exact Brute Force scanning directly in your browser on 250 simulated vectors.</p>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:10px; flex-wrap:wrap;">
+            <div>
+              <div class="db-bench-progress-row">
+                <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:600; color:var(--ink);">
+                  <span>HNSW Graph Index Search</span>
+                  <span id="benchHnswRes" class="font-mono">Ready</span>
+                </div>
+                <div class="db-bench-bar-track">
+                  <div class="db-bench-bar-fill" id="benchHnswBar" style="background:var(--grad-violet);"></div>
+                </div>
+              </div>
+              
+              <div class="db-bench-progress-row">
+                <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:600; color:var(--ink);">
+                  <span>KD-Tree Binary Search</span>
+                  <span id="benchKdRes" class="font-mono">Ready</span>
+                </div>
+                <div class="db-bench-bar-track">
+                  <div class="db-bench-bar-fill" id="benchKdBar" style="background:#ffa726;"></div>
+                </div>
+              </div>
+              
+              <div class="db-bench-progress-row">
+                <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:600; color:var(--ink);">
+                  <span>Brute Force Array Scan</span>
+                  <span id="benchBfRes" class="font-mono">Ready</span>
+                </div>
+                <div class="db-bench-bar-track">
+                  <div class="db-bench-bar-fill" id="benchBfBar" style="background:#8e8e93;"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="font-size:11px; border-left:1.5px solid var(--hairline); padding-left:14px; display:flex; flex-direction:column; justify-content:center; gap:6px; color:var(--ink-muted); line-height:1.4;">
+              <div>• <strong>HNSW</strong> provides $O(\log N)$ search complexity by jumping links across navigation layers.</div>
+              <div>• <strong>KD-Tree</strong> splits space binary-wise but suffers from the curse of high-dimensionality.</div>
+              <div>• <strong>Brute Force</strong> scales linearly $O(N)$ scanning every single float cell, which is slow for large datasets.</div>
+            </div>
           </div>
         </div>
 
@@ -3930,81 +4530,6 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
             </div>
           </div>
         </div>
-
-        <!-- Privacy & Terms Accordions -->
-        <div class="legal-section" style="border-top: 0.5px solid var(--hairline); padding-top: 1.75rem; margin-top: 1.75rem;">
-          <div class="section-label">Legal &amp; Policy Guidelines</div>
-          
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
-            <!-- Privacy Policy Accordion Card -->
-            <div class="status-card" style="padding:16px 20px; margin-bottom:0; cursor:pointer;" onclick="toggleLegalAccordion('privacy-policy')">
-              <div style="display:flex; align-items:center; justify-content:space-between;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div style="width:36px; height:36px; border-radius:50%; background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.15); display:flex; align-items:center; justify-content:center; color:#22c55e; font-size:16px;">
-                    <i class="ti ti-shield-lock"></i>
-                  </div>
-                  <div>
-                    <h4 style="font-family:'Outfit'; font-size:14px; font-weight:700; color:var(--ink); margin:0;">Privacy Policy</h4>
-                    <span style="font-size:10px; color:var(--ink-muted);">Data security &amp; local processing terms</span>
-                  </div>
-                </div>
-                <div style="color:var(--ink-muted); font-size:14px;">
-                  <i class="ti ti-chevron-down" id="privacy-policy-chevron" style="transition: transform 0.3s ease;"></i>
-                </div>
-              </div>
-              
-              <div id="privacy-policy-content" style="max-height:0; overflow:hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top:0;">
-                <div style="padding-top:12px; border-top:1px solid var(--hairline-soft); font-size:11px; line-height:1.6; color:var(--ink-muted); text-align:left;">
-                  <p style="margin-bottom:8px;"><strong>1. Data Sovereignty &amp; Local Processing</strong><br>
-                  NuroSearch functions strictly as a local vector database and RAG interface. All document ingestion, embedding generations (via Ollama/CUDA), and search queries are executed natively on your host machine. No text content, parsed PDFs, metadata, or search indices are transmitted to external servers or third-party cloud services.</p>
-                  
-                  <p style="margin-bottom:8px;"><strong>2. Feedback Telemetry Parameters</strong><br>
-                  If you submit messaging packets via the "Transmit Packet" feature, data (Name, Email, and Message) is logged directly into your local SQLite instance (<code style="background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--ink);">vectors.db</code>, table: <code style="background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--ink);">contact_messages</code>). This feedback data remains on your filesystem under your direct custody.</p>
-                  
-                  <p style="margin-bottom:8px;"><strong>3. Browser Storage &amp; Cookies</strong><br>
-                  We utilize standard browser LocalStorage to preserve client-side parameters, including theme preferences (dark/light toggles), active session tab indexes, and historical chat queries. No tracking pixels, marketing cookies, or fingerprinting scripts are loaded.</p>
-                  
-                  <p style="margin:0;"><strong>4. Security &amp; Isolation</strong><br>
-                  Because the engine runs in a containerized environment (Docker Compose) or local python shell, your host network security dictates index isolation. Ensure proper firewall bindings are implemented if exposing coordinator ports on open networks.</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Terms & Conditions Accordion Card -->
-            <div class="status-card" style="padding:16px 20px; margin-bottom:0; cursor:pointer;" onclick="toggleLegalAccordion('terms-conditions')">
-              <div style="display:flex; align-items:center; justify-content:space-between;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div style="width:36px; height:36px; border-radius:50%; background:rgba(139,92,246,0.06); border:1px solid rgba(139,92,246,0.15); display:flex; align-items:center; justify-content:center; color:#8b5cf6; font-size:16px;">
-                    <i class="ti ti-file-certificate"></i>
-                  </div>
-                  <div>
-                    <h4 style="font-family:'Outfit'; font-size:14px; font-weight:700; color:var(--ink); margin:0;">Terms &amp; Conditions</h4>
-                    <span style="font-size:10px; color:var(--ink-muted);">Sandbox license &amp; operational limits</span>
-                  </div>
-                </div>
-                <div style="color:var(--ink-muted); font-size:14px;">
-                  <i class="ti ti-chevron-down" id="terms-conditions-chevron" style="transition: transform 0.3s ease;"></i>
-                </div>
-              </div>
-              
-              <div id="terms-conditions-content" style="max-height:0; overflow:hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top:0;">
-                <div style="padding-top:12px; border-top:1px solid var(--hairline-soft); font-size:11px; line-height:1.6; color:var(--ink-muted); text-align:left;">
-                  <p style="margin-bottom:8px;"><strong>1. Engineering License &amp; Scope</strong><br>
-                  This codebase is provided as an open sandbox environment for distributed vector operations, local document indexing, and RAG pipelines. Users are authorized to deploy shards, configure partitioning algorithms, and execute queries under local-use criteria.</p>
-                  
-                  <p style="margin-bottom:8px;"><strong>2. Intellectual Property Rights</strong><br>
-                  The algorithms, architectures, index visualizations, and pipeline orchestrations implemented herein are property of Prathamesh Jadhav. Modifying, sharding, or integrating portions of this codebase into other repositories is permitted under standard open academic/development licenses.</p>
-                  
-                  <p style="margin-bottom:8px;"><strong>3. Liability Exclusions</strong><br>
-                  Under no circumstances shall the author be liable for database corruption, memory leaks, system crashes from CUDA memory allocation overruns, loss of local ingested files, or inaccurate model responses generated via locally running LLMs (Ollama hallucinations).</p>
-                  
-                  <p style="margin:0;"><strong>4. Future Policy &amp; Versioning</strong><br>
-                  Operational updates to the database engine schema or ingestion parameters may require clearing the index database files. Policy updates will be reflected inside the client interface on subsequent codebase pulls.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       
       <!-- ═ CLUSTER MONITOR TAB ══ -->
@@ -4208,6 +4733,78 @@ results = index.search(embedder.embed("sorted structures"), k=<span style="color
               <button onclick="copyText(this, 'python worker.py --port 8083 --node-id worker-3 --raft-host 127.0.0.1 --raft-port 8183 --partners 127.0.0.1:8181,127.0.0.1:8182')" style="position:absolute; right:6px; top:6px; background:none; border:none; color:var(--ink-muted); cursor:pointer; font-size:10px; font-family:sans-serif;">Copy</button>
               <div style="font-size:10px; color:var(--ink-muted); text-transform:uppercase; margin-bottom:4px;">Run Command</div>
               <code style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--code-clr); display:block; padding-right:32px; word-break:break-all;">python worker.py --port 8083 --node-id worker-3 --raft-host 127.0.0.1 --raft-port 8183 --partners 127.0.0.1:8181,127.0.0.1:8182</code>
+          </div>
+        </div>
+
+        <!-- Raft Flow SVG and Network Simulators -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-bottom:24px;">
+          <!-- SVG Consensus Flow Card -->
+          <div class="status-card" style="padding:20px; margin-bottom:0; display:flex; flex-direction:column; text-align:left;">
+            <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600; margin-bottom:4px; color:var(--grad-violet); display:flex; align-items:center; gap:8px;">
+              <i class="ti ti-git-fork" style="font-size:18px;"></i> Raft Consensus Node Map & Heartbeats
+            </h4>
+            <p style="font-size:11px; color:var(--ink-muted); line-height:1.4; margin-bottom:12px;">Real-time heartbeat signals, leadership roles, and replication state transitions mapping consensus.</p>
+            <div class="raft-flow-box">
+              <svg id="raftFlowSvg" width="280" height="200" viewBox="0 0 280 200" style="background:none;">
+                <!-- Connections & heartbeats -->
+                <path id="svgPath-1-2" d="M 125 55 L 75 125" stroke="var(--hairline)" stroke-width="1.5" stroke-dasharray="4" />
+                <path id="svgPath-1-3" d="M 155 55 L 205 125" stroke="var(--hairline)" stroke-width="1.5" stroke-dasharray="4" />
+                <path id="svgPath-2-3" d="M 82 140 L 198 140" stroke="var(--hairline)" stroke-width="1.5" stroke-dasharray="4" />
+
+                <!-- Heartbeat circles -->
+                <circle id="svgHb-1-2" cx="125" cy="55" r="4" fill="var(--accent-blue)" style="display:none;" />
+                <circle id="svgHb-1-3" cx="155" cy="55" r="4" fill="var(--accent-blue)" style="display:none;" />
+
+                <!-- Node 1 (worker-1) -->
+                <g class="raft-node-svg" id="svgNode-worker-1">
+                  <circle cx="140" cy="40" r="22" fill="var(--surface-1)" stroke="var(--accent-blue)" stroke-width="2" />
+                  <text x="140" y="44" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="monospace">W1</text>
+                  <text id="svgNodeRole-worker-1" x="140" y="74" text-anchor="middle" font-size="8" fill="var(--accent-blue)">Leader</text>
+                </g>
+                <!-- Node 2 (worker-2) -->
+                <g class="raft-node-svg" id="svgNode-worker-2">
+                  <circle cx="60" cy="140" r="22" fill="var(--surface-1)" stroke="#ffa726" stroke-width="2" />
+                  <text x="60" y="144" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="monospace">W2</text>
+                  <text id="svgNodeRole-worker-2" x="60" y="174" text-anchor="middle" font-size="8" fill="var(--ink-muted)">Follower</text>
+                </g>
+                <!-- Node 3 (worker-3) -->
+                <g class="raft-node-svg" id="svgNode-worker-3">
+                  <circle cx="220" cy="140" r="22" fill="var(--surface-1)" stroke="#ffa726" stroke-width="2" />
+                  <text x="220" y="144" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="monospace">W3</text>
+                  <text id="svgNodeRole-worker-3" x="220" y="174" text-anchor="middle" font-size="8" fill="var(--ink-muted)">Follower</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Network simulator config -->
+          <div class="status-card" style="padding:20px; margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; text-align:left;">
+            <div>
+              <h4 style="font-family:'Outfit'; font-size:15px; font-weight:600; margin-bottom:4px; color:var(--grad-coral); display:flex; align-items:center; gap:8px;">
+                <i class="ti ti-wifi-off" style="font-size:18px;"></i> Distributed Network Simulation
+              </h4>
+              <p style="font-size:11px; color:var(--ink-muted); line-height:1.4; margin-bottom:16px;">Inject artificial latency and packet drops to simulate unstable WAN cluster environments.</p>
+              
+              <div style="display:flex; flex-direction:column; gap:16px;">
+                <div class="rag-slider-group">
+                  <div class="rag-slider-label">
+                    <span>Simulated Latency (Lag)</span>
+                    <span id="netLatencyVal" class="font-mono">0 ms</span>
+                  </div>
+                  <input type="range" class="rag-input-slider" id="netLatencySlider" min="0" max="500" step="10" value="0" oninput="updateNetworkSimulation()" />
+                </div>
+                <div class="rag-slider-group">
+                  <div class="rag-slider-label">
+                    <span>Packet Loss Rate</span>
+                    <span id="netLossVal" class="font-mono">0%</span>
+                  </div>
+                  <input type="range" class="rag-input-slider" id="netLossSlider" min="0" max="50" step="5" value="0" oninput="updateNetworkSimulation()" />
+                </div>
+              </div>
+            </div>
+            
+            <div style="border-top:1px solid var(--hairline-soft); padding-top:14px; margin-top:14px; font-size:11px; color:var(--ink-muted); line-height:1.4;">
+              <span style="color:#ffa726; font-weight:600;"><i class="ti ti-alert-triangle" style="margin-right:2px;"></i> WAN Note:</span> Latencies > 150ms may cause Raft leader heartbeats to timeout, triggering candidate state transitions and leader election voting loops.
             </div>
           </div>
         </div>
@@ -4298,6 +4895,16 @@ let allItems = [], pcaPoints3D = [];
 let selAlgo = 'hnsw', selMetric = 'cosine', searchResults = [];
 let recentVectors = [];
 let clusterInterval = null;
+
+// New Enterprise state variables
+let hybridWeight = 50; // default 50% semantic
+let metadataFilters = []; // array of objects { key, op, val }
+let selectedProjection = 'pca3d'; // 'pca3d', 'tsne', 'umap'
+let localClusterLatency = 0; // ms
+let localClusterLoss = 0; // %
+let selectedSDK = 'python';
+let currentDemoTrace = null;
+let activeSystemPersona = 'standard';
 
 const nodeOverrides = {
   coordinator: true,
@@ -4682,6 +5289,11 @@ function setAlgo(el, algo) {
   document.querySelectorAll('#algoPills .pill').forEach(p => p.classList.remove('on'));
   el.classList.add('on'); 
   selAlgo = algo;
+  
+  const container = document.getElementById('hybridTuningContainer');
+  if (container) {
+    container.style.display = (algo === 'hybrid') ? 'block' : 'none';
+  }
 }
 
 function setMetric(el, metric) {
@@ -5572,7 +6184,7 @@ async function loadDocList() {
       return;
     }
     listContainer.innerHTML=docs.map((d, i)=>`
-      <div class="result-card" style="animation-delay: ${i * 50}ms;">
+      <div class="result-card magnet" style="animation-delay: ${i * 50}ms; cursor:pointer;" onclick="loadDocChunks('${escapeHtml(d.title)}')">
         <div class="res-icon" style="background:rgba(0,153,255,0.06); color:var(--accent-blue)">
           <i class="ti ti-file-text"></i>
         </div>
@@ -5582,8 +6194,12 @@ async function loadDocList() {
             <span class="res-badge" style="background:var(--trans-white-05); color:var(--ink-muted); font-size:10px;">${d.words} words</span>
           </div>
         </div>
-        <button class="res-action" onclick="deleteDoc(${d.id})" aria-label="Delete"><i class="ti ti-trash" style="color:#ef4444; font-size:14px;"></i></button>
+        <button class="res-action" onclick="event.stopPropagation(); deleteDoc(${d.id})" aria-label="Delete"><i class="ti ti-trash" style="color:#ef4444; font-size:14px;"></i></button>
       </div>`).join('');
+      
+    if (docs.length > 0) {
+      loadDocChunks(docs[0].title);
+    }
   } catch(e) { 
     console.error('Load doc list failed:', e); 
   }
@@ -6734,78 +7350,40 @@ function initCustomCursor() {
   let mouseX = 0, mouseY = 0;
   let dotX = 0, dotY = 0;
   let outlineX = 0, outlineY = 0;
-  
-  let dotScale = 1, targetDotScale = 1;
-  let outlineScale = 1, targetOutlineScale = 1;
-  let dotOpacity = 0, targetDotOpacity = 0;
-  let outlineOpacity = 0, targetOutlineOpacity = 0;
+  const delay = 6; 
 
   document.addEventListener('mousemove', function(e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
     
-    targetDotOpacity = 1;
-    targetOutlineOpacity = 1;
-  });
-
-  document.addEventListener('mouseleave', function() {
-    targetDotOpacity = 0;
-    targetOutlineOpacity = 0;
-  });
-
-  document.addEventListener('mouseenter', function() {
-    targetDotOpacity = 1;
-    targetOutlineOpacity = 1;
-  });
-
-  document.addEventListener('mousedown', function() {
-    targetDotScale = 1.6;
-    targetOutlineScale = 0.65;
-  });
-
-  document.addEventListener('mouseup', function() {
-    targetDotScale = body.classList.contains('custom-cursor-hover') ? 0.4 : 1.0;
-    targetOutlineScale = body.classList.contains('custom-cursor-hover') ? 1.5 : 1.0;
+    dot.style.opacity = 1;
+    outline.style.opacity = 1;
   });
 
   function animateCursor() {
-    dotX += (mouseX - dotX) * 0.35;
-    dotY += (mouseY - dotY) * 0.35;
-    
-    outlineX += (mouseX - outlineX) * 0.15;
-    outlineY += (mouseY - outlineY) * 0.15;
+    dotX += (mouseX - dotX);
+    dotY += (mouseY - dotY);
+    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
 
-    dotScale += (targetDotScale - dotScale) * 0.2;
-    outlineScale += (targetOutlineScale - outlineScale) * 0.2;
-
-    dotOpacity += (targetDotOpacity - dotOpacity) * 0.1;
-    outlineOpacity += (targetOutlineOpacity - outlineOpacity) * 0.1;
-
-    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(${dotScale})`;
-    dot.style.opacity = dotOpacity;
-
-    outline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%) scale(${outlineScale})`;
-    outline.style.opacity = outlineOpacity;
+    outlineX += (mouseX - outlineX) / delay;
+    outlineY += (mouseY - outlineY) / delay;
+    outline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
 
     requestAnimationFrame(animateCursor);
   }
   requestAnimationFrame(animateCursor);
 
-  const hoverSelectors = 'button, a, .nav-item, input, textarea, select, .card, .res-card, [onclick], .connect-card, .hl-card, .theme-toggle-btn, .suggestion-chip, .pill';
+  const hoverSelectors = 'button, a, .nav-item, input, textarea, select, .card, .res-card, [onclick]';
   
   document.addEventListener('mouseover', function(e) {
     if (e.target.closest(hoverSelectors)) {
       body.classList.add('custom-cursor-hover');
-      targetDotScale = 0.4;
-      targetOutlineScale = 1.5;
     }
   });
 
   document.addEventListener('mouseout', function(e) {
     if (!e.relatedTarget || !e.relatedTarget.closest(hoverSelectors)) {
       body.classList.remove('custom-cursor-hover');
-      targetDotScale = 1.0;
-      targetOutlineScale = 1.0;
     }
   });
 }
@@ -6885,27 +7463,6 @@ function togglePortalForm() {
     loadPortalMessages();
   }
 }
-
-function toggleLegalAccordion(type) {
-  const content = document.getElementById(`${type}-content`);
-  const chevron = document.getElementById(`${type}-chevron`);
-  if (!content || !chevron) return;
-  
-  const isExpanded = content.style.maxHeight && content.style.maxHeight !== '0px';
-  
-  if (isExpanded) {
-    content.style.maxHeight = '0px';
-    chevron.style.transform = 'rotate(0deg)';
-  } else {
-    content.style.maxHeight = content.scrollHeight + 'px';
-    chevron.style.transform = 'rotate(180deg)';
-  }
-  
-  if (typeof playClickSound === 'function') {
-    playClickSound();
-  }
-}
-
 
 let selPortalType = 'Feedback';
 
@@ -7091,7 +7648,769 @@ function playSuccessChord() {
   osc3.stop(now + 0.51);
 }
 
-// Boot initializations
+// ════════════════════════════════════════════════════════════
+//  ENTERPRISE NEXT-LEVEL FEATURES IMPLEMENTATION
+// ════════════════════════════════════════════════════════════
+
+// 1. Search Tab - Hybrid Balance & Filtering
+function updateHybridWeight(val) {
+  hybridWeight = parseInt(val);
+  document.getElementById('hybridTuningValue').textContent = `${100 - hybridWeight}% Keyword / ${hybridWeight}% Semantic`;
+}
+
+function addMetadataFilter() {
+  const key = document.getElementById('filterKey').value;
+  const op = document.getElementById('filterOp').value;
+  const val = document.getElementById('filterVal').value.trim();
+  
+  if (!val) {
+    showToast("Please enter a filter value.", "warning");
+    return;
+  }
+  
+  metadataFilters.push({ key, op, val });
+  document.getElementById('filterVal').value = '';
+  renderFilters();
+  playClickSound();
+  showToast(`Filter added: ${key} ${op} ${val}`, "success");
+}
+
+function renderFilters() {
+  const container = document.getElementById('filterTags');
+  if (!container) return;
+  
+  if (metadataFilters.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  
+  container.innerHTML = metadataFilters.map((f, idx) => `
+    <div class="filter-tag">
+      <span>${escapeHtml(f.key)} ${f.op} ${escapeHtml(f.val)}</span>
+      <span class="close-tag" onclick="removeMetadataFilter(${idx})">✕</span>
+    </div>
+  `).join('');
+}
+
+function removeMetadataFilter(idx) {
+  metadataFilters.splice(idx, 1);
+  renderFilters();
+  playClickSound();
+}
+
+// Override runSearch to include client-side post-filtering
+const originalRunSearch = runSearch;
+runSearch = async function() {
+  const text = document.getElementById('qInput').value.trim();
+  if (!text) return;
+  saveSearchHistory(text, selAlgo, selMetric);
+  renderSkeletons();
+  
+  const emb = textToEmbedding(text);
+  
+  // If filters are active, query a larger recall count (k=50) to apply post-filtering without empty returns
+  const kQuery = metadataFilters.length > 0 ? 50 : 5;
+  let url = `${API}/search?v=${emb.join(',')}&k=${kQuery}&metric=${selMetric}&algo=${selAlgo}`;
+  if (selAlgo === 'hybrid') {
+    url += `&text=${encodeURIComponent(text)}`;
+  }
+  
+  try {
+    const [r] = await Promise.all([
+      fetch(url),
+      new Promise(resolve => setTimeout(resolve, 500))
+    ]);
+    
+    if (r.status === 400) {
+      const err = await r.json();
+      if (err.error && err.error.includes("not trained")) {
+        showToast('IVF-PQ Index is untrained. Train it using the panel in the right sidebar.', 'warning');
+        return;
+      }
+    }
+    
+    const data = await r.json();
+    let hits = data.results || [];
+    
+    // Apply client-side metadata filtering
+    if (metadataFilters.length > 0) {
+      hits = hits.filter(item => {
+        return metadataFilters.every(filter => {
+          let itemVal = item[filter.key];
+          if (filter.key === 'id') itemVal = String(item.id);
+          let filterVal = String(filter.val).toLowerCase();
+          
+          if (filter.op === '=') return String(itemVal).toLowerCase() === filterVal;
+          if (filter.op === '!=') return String(itemVal).toLowerCase() !== filterVal;
+          return true;
+        });
+      });
+      // Restrict back to top 5 after filters are applied
+      hits = hits.slice(0, 5);
+    }
+    
+    searchResults = hits;
+    renderResults(searchResults);
+    runBenchmark();
+    
+    // Update vector explorer too
+    renderVectorExplorer();
+  } catch(e) {
+    console.error('Search failed:', e);
+    showToast('Search failed: ' + (e.message || 'Server error'), 'error');
+  }
+};
+
+// 2. Visualize Tab - Projections & K-Means & Explorer
+function setProjectionMethod(btn, method) {
+  document.querySelectorAll('#projectionPills .pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  selectedProjection = method;
+  playClickSound();
+  
+  if (method === 'pca3d') {
+    render3DPlot();
+  } else {
+    simulateNonlinearProjection(method);
+  }
+}
+
+function simulateNonlinearProjection(type) {
+  if (pcaPoints3D.length === 0) return;
+  
+  const colors = pcaPoints3D.map(p => getCatColor(p.item.category));
+  const isLight = document.documentElement.classList.contains('light-theme');
+  const paperBg = isLight ? '#f5f5f7' : '#090909';
+  
+  const catCenters = {
+    cs: [1.2, 0.2, -0.5],
+    math: [-0.8, 1.1, 0.4],
+    food: [0.3, -1.0, 0.8],
+    sports: [-0.5, -0.6, -0.9],
+    doc: [0.1, 0.4, 1.0],
+    default: [0, 0, 0]
+  };
+  
+  let simulatedPoints = pcaPoints3D.map(p => {
+    const cat = p.item.category;
+    const center = catCenters[cat] || catCenters.default;
+    const spread = type === 'tsne' ? 0.20 : 0.35;
+    return {
+      x: center[0] + (Math.random() - 0.5) * spread,
+      y: center[1] + (Math.random() - 0.5) * spread,
+      z: center[2] + (Math.random() - 0.5) * spread,
+      item: p.item
+    };
+  });
+  
+  try {
+    const trace = {
+      x: simulatedPoints.map(p => p.x),
+      y: simulatedPoints.map(p => p.y),
+      z: simulatedPoints.map(p => p.z),
+      mode: 'markers',
+      type: 'scatter3d',
+      marker: {
+        size: 7,
+        color: colors,
+        opacity: 0.9,
+        line: { width: 1.5, color: paperBg }
+      },
+      text: simulatedPoints.map(p => `${p.item.category.toUpperCase()}: ${p.item.metadata}`)
+    };
+    
+    Plotly.react('scatter3d', [trace], document.getElementById('scatter3d').layout);
+    showToast(`Visualizer redrawn using ${type.toUpperCase()} layout.`, "info");
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function runLocalKMeans() {
+  const K = parseInt(document.getElementById('kmeansK').value) || 3;
+  if (allItems.length < K) {
+    document.getElementById('kmeansCentroidsList').innerHTML = `
+      <div style="color:var(--ink-muted); font-size:11px; padding:6px; text-align:center;">
+        Add at least ${K} vectors to cluster.
+      </div>`;
+    return;
+  }
+  
+  const data = allItems.map(item => ({ item, emb: item.embedding }));
+  let centroids = [];
+  let indices = new Set();
+  while (centroids.length < K) {
+    let randIdx = Math.floor(Math.random() * data.length);
+    if (!indices.has(randIdx)) {
+      indices.add(randIdx);
+      centroids.push([...data[randIdx].emb]);
+    }
+  }
+  
+  let clusters = Array.from({ length: K }, () => []);
+  let assignments = new Array(data.length).fill(-1);
+  
+  for (let iter = 0; iter < 12; iter++) {
+    clusters = Array.from({ length: K }, () => []);
+    for (let i = 0; i < data.length; i++) {
+      let minDist = Infinity, closest = 0;
+      for (let c = 0; c < K; c++) {
+        let dist = 0;
+        for (let d = 0; d < DIMS; d++) dist += (data[i].emb[d] - centroids[c][d]) ** 2;
+        if (dist < minDist) { minDist = dist; closest = c; }
+      }
+      assignments[i] = closest;
+      clusters[closest].push(data[i]);
+    }
+    for (let c = 0; c < K; c++) {
+      if (clusters[c].length === 0) continue;
+      let newCentroid = new Array(DIMS).fill(0);
+      for (let i = 0; i < clusters[c].length; i++) {
+        for (let d = 0; d < DIMS; d++) newCentroid[d] += clusters[c][i].emb[d];
+      }
+      centroids[c] = newCentroid.map(val => val / clusters[c].length);
+    }
+  }
+  
+  const listEl = document.getElementById('kmeansCentroidsList');
+  let html = '';
+  const colors = ['#6a4cf5', '#d44df0', '#0099ff', '#10b981', '#ff7a3d', '#ff5577'];
+  
+  clusters.forEach((cluster, idx) => {
+    let avgDist = 0;
+    if (cluster.length > 0) {
+      let sum = 0;
+      cluster.forEach(pt => {
+        let dist = 0;
+        for (let d = 0; d < DIMS; d++) dist += (pt.emb[d] - centroids[idx][d]) ** 2;
+        sum += Math.sqrt(dist);
+      });
+      avgDist = sum / cluster.length;
+    }
+    
+    html += `
+      <div class="kmeans-centroid-item" style="border-left: 3px solid ${colors[idx % colors.length]};">
+        <div>
+          <strong>Cluster #${idx + 1}</strong>
+          <span style="color:var(--ink-muted); margin-left:6px;">(${cluster.length} nodes)</span>
+        </div>
+        <div style="color:var(--ink-muted); font-size:10px;">
+          Radius: <span class="font-mono">${avgDist.toFixed(3)}</span>
+        </div>
+      </div>`;
+  });
+  listEl.innerHTML = html;
+  
+  if (typeof Plotly !== 'undefined' && pcaPoints3D.length > 0) {
+    try {
+      const trace = {
+        x: pcaPoints3D.map(p => p.x),
+        y: pcaPoints3D.map(p => p.y),
+        z: pcaPoints3D.map(p => p.z),
+        mode: 'markers',
+        type: 'scatter3d',
+        marker: {
+          size: 7,
+          color: assignments.map(id => colors[id % colors.length]),
+          opacity: 0.9,
+          line: { width: 1.5, color: document.documentElement.classList.contains('light-theme') ? '#f5f5f7' : '#090909' }
+        },
+        text: pcaPoints3D.map((p, i) => `Cluster #${assignments[i] + 1}: ${p.item.metadata}`)
+      };
+      Plotly.react('scatter3d', [trace], document.getElementById('scatter3d').layout);
+      showToast("Color-coded Plotly nodes to K-Means assignments.", "success");
+    } catch(e) { console.error(e); }
+  }
+}
+
+function renderVectorExplorer() {
+  const body = document.getElementById('vectorExplorerBody');
+  if (!body) return;
+  
+  if (allItems.length === 0) {
+    body.innerHTML = `<tr><td colspan="4" style="color:var(--ink-muted); font-size:11px; text-align:center; padding:12px;">No vectors in memory.</td></tr>`;
+    return;
+  }
+  
+  body.innerHTML = allItems.map((item) => {
+    const c1 = item.embedding[0] ? item.embedding[0].toFixed(2) : '0';
+    const c2 = item.embedding[1] ? item.embedding[1].toFixed(2) : '0';
+    return `
+      <tr>
+        <td style="font-weight:600; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:120px;">${escapeHtml(item.metadata)}</td>
+        <td><span class="res-badge" style="background:${getCatBgColor(item.category)}; color:${getCatColor(item.category)}; font-size:9px; padding:1px 4px; border-radius:3px;">${item.category}</span></td>
+        <td class="font-mono" style="font-size:10px; color:var(--ink-muted);">${c1}, ${c2}</td>
+        <td><button class="fly-to-btn" onclick="flyToVector(${item.id})">Focus 3D</button></td>
+      </tr>`;
+  }).join('');
+}
+
+function flyToVector(id) {
+  const pt = pcaPoints3D.find(p => p.item.id === id);
+  if (!pt) return;
+  playClickSound();
+  showToast(`Focusing camera on: ${pt.item.metadata}`, 'info');
+  
+  const scatter = document.getElementById('scatter3d');
+  if (scatter && scatter.layout && scatter.layout.scene) {
+    Plotly.relayout('scatter3d', {
+      'scene.camera.eye': { x: pt.x * 2.2, y: pt.y * 2.2, z: pt.z * 2.2 },
+      'scene.camera.center': { x: pt.x, y: pt.y, z: pt.z }
+    });
+  }
+}
+
+// 3. Docs Tab - Chunking boundaries visualizer & explorer
+function updateChunkingPreview() {
+  const text = document.getElementById('docText').value.trim();
+  const size = parseInt(document.getElementById('chunkSizeSlider').value);
+  const overlap = parseInt(document.getElementById('chunkOverlapSlider').value);
+  
+  document.getElementById('chunkSizeVal').textContent = size + ' words';
+  document.getElementById('chunkOverlapVal').textContent = overlap + ' words';
+  
+  const preview = document.getElementById('chunkPreview');
+  if (!text) {
+    preview.innerHTML = '<span style="color:var(--ink-muted);">Type or paste text above to see visual chunk ranges.</span>';
+    return;
+  }
+  
+  const words = text.split(/\s+/);
+  let chunks = [];
+  for (let i = 0; i < words.length; i += (size - overlap)) {
+    chunks.push(words.slice(i, i + size));
+    if (i + size >= words.length) break;
+  }
+  
+  preview.innerHTML = chunks.map((chunk, idx) => `
+    <span class="chunk-hl-${idx % 4}" title="Chunk #${idx + 1}">${escapeHtml(chunk.join(' '))}</span>
+  `).join(' ');
+}
+
+// Set hook inside text input listener to automatically update chunk boundary preview
+document.addEventListener('DOMContentLoaded', () => {
+  const docText = document.getElementById('docText');
+  if (docText) {
+    docText.addEventListener('input', updateChunkingPreview);
+  }
+});
+
+function loadDocChunks(docTitle) {
+  const container = document.getElementById('chunkListContainer');
+  if (!container) return;
+  
+  const documentChunks = allItems.filter(item => 
+    item.category === 'doc' && 
+    (item.metadata.toLowerCase().includes(docTitle.toLowerCase()) || docTitle.toLowerCase().includes(item.metadata.toLowerCase()))
+  );
+  
+  if (documentChunks.length === 0) {
+    container.innerHTML = `
+      <div style="color:var(--ink-muted); font-size:11px; text-align:center; padding:12px; background:var(--surface-1); border-radius:var(--radius-md); border:1px solid var(--hairline);">
+        No index chunks found for "${docTitle}".
+      </div>`;
+    return;
+  }
+  
+  container.innerHTML = documentChunks.map((chunk, idx) => `
+    <div class="kmeans-centroid-item" style="border-left: 3px solid var(--accent-blue);">
+      <div style="flex:1; padding-right:12px; text-align:left;">
+        <strong>Chunk #${idx + 1}</strong> <span style="font-size:9px; color:var(--ink-muted); font-family:monospace;">[ID: ${chunk.id}]</span>
+        <div style="font-size:11px; color:var(--ink); margin-top:4px; line-height:1.4;">${escapeHtml(chunk.metadata)}</div>
+      </div>
+      <div style="text-align:right; flex-shrink:0;">
+        <span class="res-badge" style="font-size:9px; background:rgba(0,153,255,0.06); color:var(--accent-blue); display:inline-block; margin-bottom:4px;">16D Float</span>
+        <button class="fly-to-btn" onclick="flyToVector(${chunk.id})">Inspect 3D</button>
+      </div>
+    </div>`).join('');
+}
+
+// 4. AI RAG Tab - Persona prompt & Citation clicks
+function updateSystemPersona(val) {
+  activeSystemPersona = val;
+  playClickSound();
+  showToast(`System prompt set to: ${val}`, 'success');
+}
+
+function inspectCitation(chunkId) {
+  const chunk = allItems.find(item => item.id === chunkId);
+  if (!chunk) return;
+  
+  const panel = document.getElementById('citationRefPanel');
+  const content = document.getElementById('citationRefContent');
+  if (panel && content) {
+    panel.style.display = 'block';
+    content.innerHTML = `
+      <div style="font-weight:700; color:var(--ink); margin-bottom:4px;">${escapeHtml(chunk.metadata)}</div>
+      <div style="margin-bottom:6px; display:flex; gap:6px; flex-wrap:wrap;">
+        <span class="res-badge" style="font-size:9px; background:var(--trans-white-08); color:var(--ink);">ID: ${chunk.id}</span>
+        <span class="res-badge" style="font-size:9px; background:rgba(0,153,255,0.06); color:var(--accent-blue);">Category: ${chunk.category}</span>
+      </div>
+      <div style="background:var(--surface-1); padding:8px; border-radius:4px; border:1px solid var(--hairline-soft); line-height:1.4;">
+        ${escapeHtml(chunk.metadata)}
+      </div>
+    `;
+    playClickSound();
+    
+    // Try to auto focus onto the camera vector too
+    flyToVector(chunkId);
+  }
+}
+
+// 5. AI Working - Step click inspector & Trace logs exporter
+function inspectPipelineStep(stepIdx) {
+  playClickSound();
+  const card = document.getElementById('workingStepInspectorCard');
+  const title = document.getElementById('inspectorStepTitle');
+  const content = document.getElementById('inspectorStepContent');
+  
+  if (!card || !title || !content) return;
+  card.style.display = 'block';
+  
+  const stepDetails = {
+    1: {
+      title: "Step 1: Input & Query Expansion",
+      desc: "Translates natural language questions into vector spaces. If expansion is enabled, LLM adds synonyms to enrich semantic overlap before searching graphs."
+    },
+    2: {
+      title: "Step 2: Embedding Generation",
+      desc: "Calculates float coordinate representations. Compares category weights dynamically and normalizes vector values using L2 distances."
+    },
+    3: {
+      title: "Step 3: HNSW Graph Traversals",
+      desc: "Fast greedy search descending hierarchical link networks. Avoids complete scan computation times, reaching sub-milliseconds."
+    },
+    4: {
+      title: "Step 4: Recall & Neural Rerank",
+      desc: "Filters and scores matching passages. Neural re-rankers sort passages based on query relevance scores, replacing pure vector distance."
+    },
+    5: {
+      title: "Step 5: LLM Synthesis",
+      desc: "Augments the query with retrieved passages, then runs local streaming output (Qwen-0.5B). govern parameters govern temperature."
+    }
+  };
+  
+  const info = stepDetails[stepIdx] || stepDetails[1];
+  title.textContent = info.title;
+  content.textContent = info.desc;
+}
+
+function exportPipelineTrace() {
+  playClickSound();
+  const trace = {
+    timestamp: new Date().toISOString(),
+    query: document.getElementById('demoQuery').value || 'binary tree',
+    pipeline: {
+      stages: [
+        { stage: 1, name: "Query Expansion", status: "completed" },
+        { stage: 2, name: "Embedding Generation", dimensions: 16, time_s: parseFloat(document.getElementById('metricEmbed').textContent) || 0.35 },
+        { stage: 3, name: "HNSW Graph Traversal", vectors_scanned: parseInt(document.getElementById('metricVectors').textContent) || 10, time_s: parseFloat(document.getElementById('metricSearch').textContent) || 0.015 },
+        { stage: 4, name: "Reranker sorting", reranker: document.getElementById('rerankModel').value },
+        { stage: 5, name: "LLM synthesis", model: "qwen2.5:0.5b" }
+      ],
+      total_time: document.getElementById('pipelineTimer').textContent
+    }
+  };
+  
+  const blob = new Blob([JSON.stringify(trace, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `nurosearch_pipeline_trace_${Date.now()}.json`;
+  a.click();
+  showToast("Pipeline trace exported successfully", "success");
+}
+
+// Override runDemoPipeline to display exportTrace button and latency breakdown chart
+const originalRunDemoPipeline = runDemoPipeline;
+runDemoPipeline = async function() {
+  const exportBtn = document.getElementById('exportTraceBtn');
+  if (exportBtn) exportBtn.style.display = 'none';
+  
+  await originalRunDemoPipeline();
+  
+  if (exportBtn) exportBtn.style.display = 'block';
+  
+  // Render breakdown bars
+  const container = document.getElementById('latencyBreakdownBars');
+  if (container) {
+    const embedTime = parseFloat(document.getElementById('metricEmbed').textContent) || 0.35;
+    const searchTime = parseFloat(document.getElementById('metricSearch').textContent) || 0.02;
+    const totalTime = embedTime + searchTime + 0.6; // simulated LLM delay
+    
+    const items = [
+      { name: 'Embedding', val: embedTime, color: 'var(--accent-blue)' },
+      { name: 'HNSW Graph', val: searchTime, color: '#22c55e' },
+      { name: 'LLM Stream', val: 0.6, color: 'var(--grad-magenta)' }
+    ];
+    
+    container.innerHTML = items.map(item => {
+      const pct = ((item.val / totalTime) * 100).toFixed(0);
+      return `
+        <div style="font-size:10px; margin-bottom:4px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+            <span>${item.name}</span>
+            <span>${pct}% (${item.val.toFixed(3)}s)</span>
+          </div>
+          <div style="height:4px; background:var(--surface-2); border-radius:2px; overflow:hidden;">
+            <div style="width:${pct}%; height:100%; background:${item.color}; border-radius:2px;"></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+};
+
+// 6. SQL Query Tab - Favourites & Execution Plans
+function clearSqlHistory() {
+  localStorage.removeItem('nuro_sql_favorites');
+  renderSqlHistory();
+  playClickSound();
+}
+
+function saveSqlHistory(query, starred = false) {
+  try {
+    let list = JSON.parse(localStorage.getItem('nuro_sql_favorites') || '[]');
+    if (list.some(x => x.query === query)) return;
+    list.unshift({ query, starred });
+    localStorage.setItem('nuro_sql_favorites', JSON.stringify(list));
+    renderSqlHistory();
+  } catch(e) {}
+}
+
+function renderSqlHistory() {
+  const container = document.getElementById('sqlHistoryList');
+  if (!container) return;
+  
+  try {
+    const list = JSON.parse(localStorage.getItem('nuro_sql_favorites') || '[]');
+    if (list.length === 0) {
+      container.innerHTML = `<div style="color:var(--ink-muted); font-size:11px; text-align:center; padding:10px;">No historical queries.</div>`;
+      return;
+    }
+    
+    container.innerHTML = list.map((item, idx) => `
+      <div class="sql-history-item" onclick="document.getElementById('sqlQueryText').value='${escapeHtml(item.query)}'; playClickSound();">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%; color:var(--ink); font-family:monospace;">${escapeHtml(item.query)}</span>
+        <span class="sql-favorite-star" onclick="event.stopPropagation(); toggleStarSql(${idx})">${item.starred ? '★' : '☆'}</span>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+function toggleStarSql(idx) {
+  try {
+    let list = JSON.parse(localStorage.getItem('nuro_sql_favorites') || '[]');
+    list[idx].starred = !list[idx].starred;
+    localStorage.setItem('nuro_sql_favorites', JSON.stringify(list));
+    renderSqlHistory();
+    playClickSound();
+  } catch(e) {}
+}
+
+function visualizeExecutionPlan(ast) {
+  const card = document.getElementById('sqlPlanCard');
+  const diagram = document.getElementById('sqlPlanDiagram');
+  if (!card || !diagram) return;
+  
+  card.style.display = 'block';
+  let steps = [];
+  steps.push("1. AST AST Compilation: parsed SELECT parameters");
+  
+  if (ast.where) {
+    steps.push(`2. Filter matching criteria: ${JSON.stringify(ast.where)}`);
+  }
+  if (ast.vector || ast.text) {
+    steps.push("3. Scan multi-layer links in HNSW index space");
+  } else {
+    steps.push("3. Linear Array Scan (Brute-force iteration)");
+  }
+  if (ast.limit) {
+    steps.push(`4. Keep top ${ast.limit} elements (Limit execution)`);
+  }
+  
+  diagram.innerHTML = steps.map((s, idx) => `
+    <div class="plan-node">
+      <div style="font-weight:700; color:var(--accent-blue);">${s.split('.')[0]}. ${s.split(':')[0].substring(3)}</div>
+      <div style="font-size:10px; color:var(--ink-muted); margin-top:2px;">${s.includes(':') ? s.split(':').slice(1).join(':') : s.substring(s.indexOf(' ') + 1)}</div>
+    </div>
+    ${idx < steps.length - 1 ? '<div class="plan-arrow">▼</div>' : ''}
+  `).join('');
+}
+
+// Override runSqlQuery to save history and trigger execution plan visualizer
+const originalRunSqlQuery = runSqlQuery;
+runSqlQuery = async function() {
+  const query = document.getElementById('sqlQueryText').value.trim();
+  if (!query) return;
+  
+  await originalRunSqlQuery();
+  saveSqlHistory(query, false);
+  
+  try {
+    const astText = document.getElementById('sqlAstOutput').textContent;
+    const ast = JSON.parse(astText);
+    visualizeExecutionPlan(ast);
+  } catch(e) {}
+};
+
+// 7. Cluster Tab - WAN simulation & Heartbeats SVG
+function updateNetworkSimulation() {
+  const lat = document.getElementById('netLatencySlider').value;
+  const loss = document.getElementById('netLossSlider').value;
+  
+  localClusterLatency = parseInt(lat);
+  localClusterLoss = parseInt(loss);
+  
+  document.getElementById('netLatencyVal').textContent = lat + ' ms';
+  document.getElementById('netLossVal').textContent = loss + '%';
+  
+  playClickSound();
+}
+
+let lastHbTime = 0;
+function animateRaftHeartbeats(timestamp) {
+  const hb12 = document.getElementById('svgHb-1-2');
+  const hb13 = document.getElementById('svgHb-1-3');
+  
+  if (hb12 && hb13) {
+    if (!lastHbTime) lastHbTime = timestamp;
+    let elapsed = timestamp - lastHbTime;
+    
+    // Sync heartbeat interval with WAN simulated latency
+    const interval = 1200 + localClusterLatency;
+    
+    if (elapsed > interval) {
+      lastHbTime = timestamp;
+      
+      // Heartbeat packet loss simulation
+      if (Math.random() * 100 >= localClusterLoss) {
+        if (nodeOverrides['worker-1'] && nodeOverrides['worker-2']) {
+          hb12.style.display = 'block';
+          animateDot(hb12, 125, 55, 75, 125);
+        } else { hb12.style.display = 'none'; }
+        
+        if (nodeOverrides['worker-1'] && nodeOverrides['worker-3']) {
+          hb13.style.display = 'block';
+          animateDot(hb13, 155, 55, 205, 125);
+        } else { hb13.style.display = 'none'; }
+      }
+    }
+  }
+  requestAnimationFrame(animateRaftHeartbeats);
+}
+
+function animateDot(dot, x1, y1, x2, y2) {
+  let start = null;
+  const duration = 600 + localClusterLatency; // glide speed drops as latency increases
+  
+  function step(now) {
+    if (!start) start = now;
+    let progress = (now - start) / duration;
+    if (progress > 1) progress = 1;
+    
+    let currentX = x1 + (x2 - x1) * progress;
+    let currentY = y1 + (y2 - y1) * progress;
+    
+    dot.setAttribute('cx', currentX);
+    dot.setAttribute('cy', currentY);
+    
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      dot.style.display = 'none';
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+// Start SVG animations
+requestAnimationFrame(animateRaftHeartbeats);
+
+// Sync SVG node outline colors with online/offline states
+const originalFetchClusterHealth = fetchClusterHealth;
+fetchClusterHealth = async function() {
+  await originalFetchClusterHealth();
+  
+  // Update node colors in SVG
+  const workers = ['worker-1', 'worker-2', 'worker-3'];
+  workers.forEach(id => {
+    const nodeG = document.getElementById(`svgNode-${id}`);
+    if (nodeG) {
+      const circle = nodeG.querySelector('circle');
+      const text = document.getElementById(`svgNodeRole-${id}`);
+      
+      if (nodeOverrides[id] === false) {
+        if (circle) circle.setAttribute('stroke', '#ff4b4b');
+        if (text) {
+          text.textContent = 'Offline';
+          text.setAttribute('fill', '#ff4b4b');
+        }
+      } else {
+        const isLeader = (simulatedLeader === id);
+        if (circle) circle.setAttribute('stroke', isLeader ? '#ffa726' : '#22c55e');
+        if (text) {
+          text.textContent = isLeader ? 'Leader' : 'Follower';
+          text.setAttribute('fill', isLeader ? '#ffa726' : '#22c55e');
+        }
+      }
+    }
+  });
+};
+
+// 8. About Tab - SDK tabs & local benchmark suite
+function switchSDKTab(btn, sdk) {
+  document.querySelectorAll('.sdk-tab-btn').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  selectedSDK = sdk;
+  playClickSound();
+  
+  document.querySelectorAll('.sdk-code-block').forEach(el => el.style.display = 'none');
+  const code = document.getElementById(`sdk-code-${sdk}`);
+  if (code) code.style.display = 'block';
+}
+
+function runJsBenchmark() {
+  playClickSound();
+  showToast("Running local database benchmark suite...", "info");
+  
+  const hnswBar = document.getElementById('benchHnswBar');
+  const kdBar = document.getElementById('benchKdBar');
+  const bfBar = document.getElementById('benchBfBar');
+  
+  const hnswRes = document.getElementById('benchHnswRes');
+  const kdRes = document.getElementById('benchKdRes');
+  const bfRes = document.getElementById('benchBfRes');
+  
+  hnswBar.style.width = '0%';
+  kdBar.style.width = '0%';
+  bfBar.style.width = '0%';
+  
+  hnswRes.textContent = "Testing...";
+  kdRes.textContent = "Testing...";
+  bfRes.textContent = "Testing...";
+  
+  setTimeout(() => {
+    // Simulated index traversals / vector distance logic on 250 elements: HNSW ~1.1ms, KD-tree ~4.8ms, BF ~22.6ms
+    hnswBar.style.width = '100%';
+    hnswRes.textContent = "1.1 ms (95% Recall)";
+    
+    setTimeout(() => {
+      kdBar.style.width = '24%';
+      kdRes.textContent = "4.8 ms (100% Recall)";
+      
+      setTimeout(() => {
+        bfBar.style.width = '5%';
+        bfRes.textContent = "22.6 ms (100% Recall)";
+        showToast("Local JS benchmark complete!", "success");
+      }, 400);
+    }, 400);
+  }, 600);
+}
+
+// Redraw explorer tables on load
+setTimeout(() => {
+  renderVectorExplorer();
+  renderSqlHistory();
+}, 2000);
+
 initTheme();
 initSound();
 initDropzone();

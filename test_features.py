@@ -21,7 +21,7 @@ def print_header(title):
     print(f" {title.upper():^58}")
     print("=" * 60)
 
-def test_get(endpoint, description):
+def run_get_test(endpoint, description):
     print(f"\n[TEST] {description}")
     print(f"  GET {BASE_URL}{endpoint}")
     try:
@@ -42,7 +42,7 @@ def test_get(endpoint, description):
     except Exception as e:
         print(f"  [ERROR] {e}")
 
-def test_post(endpoint, payload, description, timeout=10):
+def run_post_test(endpoint, payload, description, timeout=10):
     print(f"\n[TEST] {description}")
     print(f"  POST {BASE_URL}{endpoint}")
     print(f"  Payload: {json.dumps(payload)}")
@@ -54,7 +54,7 @@ def test_post(endpoint, payload, description, timeout=10):
     except Exception as e:
         print(f"  [ERROR] {e}")
 
-def test_stream_post(endpoint, payload, description):
+def run_stream_post_test(endpoint, payload, description):
     print(f"\n[TEST] {description}")
     print(f"  POST {BASE_URL}{endpoint} (Streaming)")
     print(f"  Payload: {json.dumps(payload)}")
@@ -104,9 +104,9 @@ def run_tests():
 
     # 1. Server Health & Stats
     print_header("1. Server Health & Stats")
-    test_get("/status", "Check system status")
-    test_get("/stats", "Get DB vector stats")
-    test_get("/hnsw-info", "Get HNSW graph visualization info")
+    run_get_test("/status", "Check system status")
+    run_get_test("/stats", "Get DB vector stats")
+    run_get_test("/hnsw-info", "Get HNSW graph visualization info")
 
     # 2. Vector Operations (CRUD)
     print_header("2. Vector Insert & Delete")
@@ -134,11 +134,11 @@ def run_tests():
     # query representation for sports/games category
     query_vector = "0.9,0.1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.3"
     
-    test_get(f"/search?v={query_vector}&k=2&algo=hnsw&metric=cosine", "HNSW Index (Cosine Distance)")
-    test_get(f"/search?v={query_vector}&k=2&algo=kdtree&metric=euclidean", "KD-Tree (Euclidean Distance)")
-    test_get(f"/search?v={query_vector}&k=2&algo=bruteforce&metric=manhattan", "Brute-Force Search (Manhattan)")
-    test_get(f"/search?v={query_vector}&k=2&algo=ivfpq&metric=cosine", "IVFPQ Vector Index")
-    test_get(f"/search?v={query_vector}&k=2&algo=gpu&metric=cosine", "GPU Accelerated Search")
+    run_get_test(f"/search?v={query_vector}&k=2&algo=hnsw&metric=cosine", "HNSW Index (Cosine Distance)")
+    run_get_test(f"/search?v={query_vector}&k=2&algo=kdtree&metric=euclidean", "KD-Tree (Euclidean Distance)")
+    run_get_test(f"/search?v={query_vector}&k=2&algo=bruteforce&metric=manhattan", "Brute-Force Search (Manhattan)")
+    run_get_test(f"/search?v={query_vector}&k=2&algo=ivfpq&metric=cosine", "IVFPQ Vector Index")
+    run_get_test(f"/search?v={query_vector}&k=2&algo=gpu&metric=cosine", "GPU Accelerated Search")
 
     # 4. NuroSearch Query Language Parser
     print_header("4. SQL-like Query Parser (/query)")
@@ -148,36 +148,36 @@ def run_tests():
         "query": "SELECT * FROM vectors WHERE category = 'sports' AND similarity > 0.70 LIMIT 2",
         "v": query_vector
     }
-    test_post("/query", sql_payload_1, "Execute select sports query with similarity constraint")
+    run_post_test("/query", sql_payload_1, "Execute select sports query with similarity constraint")
 
     sql_payload_2 = {
         "query": "SELECT * FROM vectors WHERE category = 'tech' LIMIT 3"
     }
-    test_post("/query", sql_payload_2, "Execute select tech query (using random vector fallback)")
+    run_post_test("/query", sql_payload_2, "Execute select tech query (using random vector fallback)")
 
     # 5. Benchmarking Features
     print_header("5. Performance Benchmarking")
-    test_get(f"/benchmark?v={query_vector}&k=3&metric=cosine", "Get search algorithm latencies comparison")
-    test_post("/benchmark/run", {}, "Trigger full benchmark suite test execution", timeout=60)
+    run_get_test(f"/benchmark?v={query_vector}&k=3&metric=cosine", "Get search algorithm latencies comparison")
+    run_post_test("/benchmark/run", {}, "Trigger full benchmark suite test execution", timeout=60)
 
     # 6. Document & RAG Features
     print_header("6. Document Semantic Search & RAG")
-    test_get("/doc/list", "List indexed documents")
+    run_get_test("/doc/list", "List indexed documents")
     
     doc_search_payload = {
         "question": "space missions to mars Perseverance rover"
     }
-    test_post("/doc/search", doc_search_payload, "Hybrid Document Search (BM25 + Semantic)")
+    run_post_test("/doc/search", doc_search_payload, "Hybrid Document Search (BM25 + Semantic)")
 
     rag_payload = {
         "question": "What planets are in our solar system?"
     }
-    test_stream_post("/doc/ask", rag_payload, "RAG Question Answering (Ollama)")
+    run_stream_post_test("/doc/ask", rag_payload, "RAG Question Answering (Ollama)")
 
     graph_rag_payload = {
         "question": "Explain Mars exploration and discoveries"
     }
-    test_stream_post("/doc/ask/graph", graph_rag_payload, "GraphRAG Multi-Hop Relational QA (Neo4j)")
+    run_stream_post_test("/doc/ask/graph", graph_rag_payload, "GraphRAG Multi-Hop Relational QA (Neo4j)")
 
     # 7. Cleanup
     print_header("7. Database Cleanup")
