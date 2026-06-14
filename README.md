@@ -40,7 +40,7 @@ pinned: false
 
 ---
 
-## 📺 Interactive Dashboard Demo
+## 📺 Interactive Dashboard Demo .
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Prathamesh-Jadhav04/NuroSearch/main/assets/demo.gif" alt="NuroSearch 30-Sec Dashboard Demo" width="850" />
