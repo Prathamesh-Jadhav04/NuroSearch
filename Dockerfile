@@ -16,6 +16,11 @@ RUN curl -fsSL https://ollama.com/download/ollama-linux-amd64.tar.zst | tar -x -
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Set Ollama model storage path and pre-download models (cached layer)
+ENV OLLAMA_MODELS=/app/ollama_models
+RUN mkdir -p /app/ollama_models && \
+    (ollama serve & PID=$! && sleep 5 && ollama pull nomic-embed-text && ollama pull qwen2.5:0.5b && kill $PID && wait $PID || true)
+
 # Copy source
 COPY . .
 

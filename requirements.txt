@@ -35,3 +35,6 @@ kafka-python-ng>=2.0
 
 # Optional: Distributed consensus (worker nodes) — only needed for cluster mode
 pysyncobj>=0.3
+
+# WSGI Server for Production
+gunicorn>=21.0

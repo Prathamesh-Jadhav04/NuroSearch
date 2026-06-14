@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set Ollama models directory explicitly
+export OLLAMA_MODELS=/app/ollama_models
+
 # Start Ollama service in background
 if command -v ollama >/dev/null 2>&1; then
     echo "Starting Ollama server..."
@@ -14,13 +17,9 @@ if command -v ollama >/dev/null 2>&1; then
     done
     
     if [ $counter -eq $timeout ]; then
-        echo "Ollama server failed to start within $timeout seconds. Skipping model pulling."
+        echo "Ollama server failed to start within $timeout seconds."
     else
-        echo "Pulling nomic-embed-text..."
-        ollama pull nomic-embed-text
-        
-        echo "Pulling qwen2.5:0.5b..."
-        ollama pull qwen2.5:0.5b
+        echo "Ollama server started successfully."
     fi
 else
     echo "Ollama not installed, skipping startup"
@@ -36,6 +35,6 @@ python worker.py --port 8083 --node-id worker-3 --raft-host 127.0.0.1 --raft-por
 echo "Starting Coordinator..."
 python coordinator.py > /tmp/coordinator.log 2>&1 &
 
-# Start Flask Main Server (replaces script process as PID 1)
-echo "Starting main application..."
-exec python main.py
+# Start Flask Main Server via Gunicorn (replaces script process as PID 1)
+echo "Starting main application via Gunicorn..."
+exec gunicorn --bind 0.0.0.0:7860 --workers 1 --threads 4 --timeout 120 main:app
